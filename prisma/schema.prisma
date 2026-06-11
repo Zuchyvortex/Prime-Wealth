@@ -1,0 +1,106 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id            String    @id @default(uuid())
+  name          String
+  email         String    @unique
+  password      String
+  role          String    @default("user")
+  balance       Float     @default(0.0)
+  savings       Float     @default(0.0)
+  investments   Float     @default(0.0)
+  status        String    @default("active")
+  tier          String    @default("starter")
+  avatar        String?
+  phone         String?
+  job           String?
+  joinedDate    DateTime  @default(now())
+
+  cards           Card[]
+  transactions    Transaction[]  @relation("UserTransactions")
+  notifications   Notification[]
+  chatMessages    ChatMessage[]
+  investmentsList Investment[]   @relation("UserInvestments")
+}
+
+model Card {
+  id       String @id @default(uuid())
+  number   String
+  name     String
+  expiry   String
+  cvv      String
+  type     String
+  balance  Float  @default(0.0)
+  userId   String
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Transaction {
+  id          String   @id @default(uuid())
+  userId      String
+  userEmail   String
+  userName    String
+  type        String
+  amount      Float
+  category    String
+  description String
+  status      String   @default("pending")
+  date        DateTime @default(now())
+  targetEmail String?
+  method      String?
+  proof       String?
+
+  user        User     @relation("UserTransactions", fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userEmail String
+  title     String
+  message   String
+  type      String
+  read      Boolean  @default(false)
+  date      DateTime @default(now())
+
+  user      User     @relation(fields: [userEmail], references: [email], onDelete: Cascade)
+}
+
+model ChatMessage {
+  id        String   @id @default(uuid())
+  userId    String
+  content   String
+  sender    String
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  action    String
+  details   String
+  adminId   String?
+  createdAt DateTime @default(now())
+}
+
+model Investment {
+  id        String   @id @default(uuid())
+  userId    String
+  plan      String   // Starter, Growth, Elite
+  amount    Float
+  roi       Float    // ROI percentage
+  duration  Int      // Duration in days
+  profit    Float    // Estimated profit
+  status    String   @default("active") // active, completed, matured
+  startDate DateTime @default(now())
+  endDate   DateTime
+
+  user      User     @relation("UserInvestments", fields: [userId], references: [id], onDelete: Cascade)
+}
