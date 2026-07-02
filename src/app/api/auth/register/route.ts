@@ -4,34 +4,48 @@ import bcrypt from "bcryptjs";
 import { z } from "zod";
 
 const registerSchema = z.object({
-  name: z.string().min(2),
-  email: z.string().email(),
-  password: z.string().min(6),
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { name, email, password } = registerSchema.parse(body);
 
+    // Validate input
+    const parsed = registerSchema.safeParse(body);
+    if (!parsed.success) {
+      const message = parsed.error.errors[0]?.message ?? "Invalid input data";
+      return NextResponse.json({ success: false, message }, { status: 400 });
+    }
+
+    const { name, email, password } = parsed.data;
+
+    // Check for existing account
     const existingUser = await prisma.user.findUnique({
       where: { email: email.toLowerCase() },
     });
 
     if (existingUser) {
-      return NextResponse.json({ success: false, message: "Email already registered" }, { status: 400 });
+      return NextResponse.json(
+        { success: false, message: "An account with this email already exists." },
+        { status: 400 }
+      );
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 12);
 
-    const newUser = await prisma.user.create({
+    // SECURITY: Role is always "user" — admin accounts are never created via public registration
+    await prisma.user.create({
       data: {
         name,
         email: email.toLowerCase(),
         password: hashedPassword,
-        balance: 10000.00, // Preseed new users with a warm welcome balance
-        savings: 2500.00,
-        investments: 0.00,
+        role: "user",
+        balance: 10000.0,
+        savings: 2500.0,
+        investments: 0.0,
         tier: "starter",
         avatar: `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(name)}`,
         job: "Wealth Advisory Member",
@@ -42,24 +56,29 @@ export async function POST(req: Request) {
             expiry: "09/30",
             cvv: String(Math.floor(100 + Math.random() * 900)),
             type: "visa",
-            balance: 2000.00,
-          }
+            balance: 2000.0,
+          },
         },
         notifications: {
           create: {
             title: "Welcome to Prime Wealth",
-            message: "Your premium account setup is complete. Enjoy $10,000.00 complimentary starter balance.",
+            message:
+              "Your premium account setup is complete. Enjoy $10,000.00 complimentary starter balance.",
             type: "success",
-          }
-        }
+          },
+        },
       },
     });
 
-    return NextResponse.json({ success: true, message: "Account created successfully" }, { status: 201 });
+    return NextResponse.json(
+      { success: true, message: "Account created successfully" },
+      { status: 201 }
+    );
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      return NextResponse.json({ success: false, message: "Invalid input data" }, { status: 400 });
-    }
-    return NextResponse.json({ success: false, message: "Internal server error" }, { status: 500 });
+    console.error("[Register API] Error:", error);
+    return NextResponse.json(
+      { success: false, message: "Internal server error. Please try again." },
+      { status: 500 }
+    );
   }
 }

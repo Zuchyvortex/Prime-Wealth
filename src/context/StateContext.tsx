@@ -344,7 +344,7 @@ export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       balance: parseFloat((currentUser.balance - amount).toFixed(2))
     };
 
-    // Credit recipient if they are in our mock system
+    // Credit recipient if they are a registered user
     const updatedUsers = users.map((u) => {
       if (u.email.toLowerCase() === recipientEmail.toLowerCase()) {
         return {

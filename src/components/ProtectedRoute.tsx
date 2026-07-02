@@ -8,27 +8,31 @@ interface ProtectedRouteProps {
   children: React.ReactNode;
   adminOnly?: boolean;
   userOnly?: boolean;
+  loginUrl?: string;
 }
 
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   children,
   adminOnly = false,
   userOnly = false,
+  loginUrl = "/login",
 }) => {
   const { data: session, status } = useSession();
   const router = useRouter();
 
   useEffect(() => {
     if (status === "unauthenticated") {
-      router.push("/login");
+      router.push(loginUrl);
     } else if (status === "authenticated") {
       if (adminOnly && session?.user?.role !== "admin") {
+        // Non-admin tried to access admin route — send to their dashboard
         router.push("/dashboard");
       } else if (userOnly && session?.user?.role === "admin") {
-        router.push("/admin");
+        // Admin tried to access user-only route — send to admin dashboard
+        router.push("/admin/dashboard");
       }
     }
-  }, [session, status, adminOnly, userOnly, router]);
+  }, [session, status, adminOnly, userOnly, router, loginUrl]);
 
   if (status === "loading" || status === "unauthenticated") {
     return (
@@ -61,7 +65,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     );
   }
 
-  // Double check authorization
+  // Double check authorization after loading
   if (adminOnly && session?.user?.role !== "admin") return null;
   if (userOnly && session?.user?.role === "admin") return null;
 

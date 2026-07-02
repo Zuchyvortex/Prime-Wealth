@@ -8,7 +8,7 @@ import useSWR from "swr";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { 
   BarChart3, Users, Landmark, LogOut, Menu, X, 
-  ShieldCheck, Search, Bell, Settings, MessageSquare, Scroll 
+  ShieldCheck, Search, Bell, LayoutDashboard, MessageSquare, Scroll 
 } from "lucide-react";
 
 const fetcher = (url: string) => fetch(url).then(res => res.json());
@@ -18,13 +18,24 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const router = useRouter();
   
   const { data: session } = useSession();
-  const { data: currentUser } = useSWR("/api/user/profile", fetcher);
-  const { data: transactions } = useSWR("/api/admin/transactions", fetcher);
+  const { data: currentUser } = useSWR(
+    session?.user?.role === "admin" ? "/api/user/profile" : null,
+    fetcher
+  );
+  const { data: transactions } = useSWR(
+    session?.user?.role === "admin" ? "/api/admin/transactions" : null,
+    fetcher
+  );
 
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
+  // If on the login page, render children only — no sidebar/protection wrapper
+  if (pathname === "/admin/login") {
+    return <>{children}</>;
+  }
+
   const adminMenuItems = [
-    { label: "Overview", icon: <BarChart3 className="w-5 h-5" />, href: "/admin" },
+    { label: "Dashboard", icon: <LayoutDashboard className="w-5 h-5" />, href: "/admin/dashboard" },
     { label: "User Accounts", icon: <Users className="w-5 h-5" />, href: "/admin/users" },
     { label: "Financial Ledger", icon: <Landmark className="w-5 h-5" />, href: "/admin/transactions" },
     { label: "Support Chats", icon: <MessageSquare className="w-5 h-5" />, href: "/admin/chat" },
@@ -32,17 +43,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   ];
 
   const handleLogout = async () => {
-    await signOut({ callbackUrl: "/login" });
+    await signOut({ callbackUrl: "/admin/login" });
   };
 
   const pendingCount = (transactions || []).filter((t: any) => t.status === "pending").length;
 
   return (
-    <ProtectedRoute adminOnly={true}>
+    <ProtectedRoute adminOnly={true} loginUrl="/admin/login">
       <div className="min-h-screen bg-[#070913] text-slate-100 flex flex-col md:flex-row relative">
         {/* Background glow filters */}
         <div className="absolute top-0 right-0 w-96 h-96 bg-purple-900/5 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-900/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-indigo-900/5 rounded-full blur-3xl pointer-events-none" />
 
         {/* DESKTOP SIDEBAR */}
         <aside className="hidden md:flex flex-col w-64 bg-[#090c16] border-r border-white/5 sticky top-0 h-screen shrink-0 z-20">
@@ -61,7 +72,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           {/* Navigation Links */}
           <nav className="flex-1 px-4 py-6 space-y-1.5">
             {adminMenuItems.map((item) => {
-              const active = pathname === item.href;
+              const active = pathname === item.href || pathname?.startsWith(item.href + "/");
               const isLedger = item.label === "Financial Ledger";
               return (
                 <Link
@@ -90,14 +101,20 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           {/* Bottom user capsule */}
           <div className="p-4 border-t border-white/5 space-y-4">
             <div className="flex items-center gap-3 px-2">
-              <img
-                src={currentUser?.avatar}
-                alt={currentUser?.name}
-                className="w-10 h-10 rounded-xl object-cover border border-white/10"
-              />
+              {currentUser?.avatar ? (
+                <img
+                  src={currentUser.avatar}
+                  alt={currentUser?.name}
+                  className="w-10 h-10 rounded-xl object-cover border border-white/10"
+                />
+              ) : (
+                <div className="w-10 h-10 rounded-xl bg-gradient-purple-blue flex items-center justify-center text-white font-bold text-sm shrink-0">
+                  {currentUser?.name?.charAt(0)?.toUpperCase() || "A"}
+                </div>
+              )}
               <div className="min-w-0 flex-1">
-                <p className="text-xs font-bold text-white truncate">{currentUser?.name}</p>
-                <span className="inline-block mt-0.5 px-2 py-0.5 rounded bg-red-500/10 text-[8px] font-bold text-red-400 border border-red-500/10 uppercase tracking-widest">
+                <p className="text-xs font-bold text-white truncate">{currentUser?.name || session?.user?.name}</p>
+                <span className="inline-block mt-0.5 px-2 py-0.5 rounded bg-purple-500/15 text-[8px] font-bold text-purple-400 border border-purple-500/20 uppercase tracking-widest">
                   System Admin
                 </span>
               </div>
@@ -105,7 +122,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             
             <button
               onClick={handleLogout}
-              className="w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold text-red-450 hover:bg-red-950/20 transition-all cursor-pointer"
+              className="w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold text-red-400 hover:bg-red-950/20 transition-all cursor-pointer"
             >
               <LogOut className="w-5 h-5" />
               Sign Out
@@ -137,7 +154,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
               <nav className="flex-1 space-y-1.5">
                 {adminMenuItems.map((item) => {
-                  const active = pathname === item.href;
+                  const active = pathname === item.href || pathname?.startsWith(item.href + "/");
                   return (
                     <Link
                       key={item.label}
@@ -158,10 +175,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
               <div className="border-t border-white/5 pt-4 space-y-4">
                 <div className="flex items-center gap-3">
-                  <img src={currentUser?.avatar} alt={currentUser?.name} className="w-10 h-10 rounded-xl border border-white/10" />
+                  {currentUser?.avatar ? (
+                    <img src={currentUser.avatar} alt={currentUser?.name} className="w-10 h-10 rounded-xl border border-white/10" />
+                  ) : (
+                    <div className="w-10 h-10 rounded-xl bg-gradient-purple-blue flex items-center justify-center text-white font-bold text-sm shrink-0">
+                      {currentUser?.name?.charAt(0)?.toUpperCase() || "A"}
+                    </div>
+                  )}
                   <div>
-                    <p className="text-xs font-bold text-white">{currentUser?.name}</p>
-                    <span className="inline-block mt-0.5 px-2 py-0.5 rounded bg-red-500/10 text-[8px] font-bold text-red-400 uppercase tracking-widest">Admin</span>
+                    <p className="text-xs font-bold text-white">{currentUser?.name || session?.user?.name}</p>
+                    <span className="inline-block mt-0.5 px-2 py-0.5 rounded bg-purple-500/15 text-[8px] font-bold text-purple-400 uppercase tracking-widest">Admin</span>
                   </div>
                 </div>
                 
@@ -180,7 +203,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         {/* MAIN BODY AREA */}
         <div className="flex-1 flex flex-col min-w-0 relative">
           
-          {/* HEADER HEADER */}
+          {/* HEADER */}
           <header className="h-20 bg-[#070913]/80 backdrop-blur-md border-b border-white/5 sticky top-0 z-10 flex items-center justify-between px-4 sm:px-6 lg:px-8">
             <div className="flex items-center gap-4">
               <button
@@ -214,14 +237,22 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               </div>
 
               <div className="flex items-center gap-2.5 border-l border-white/10 pl-4">
-                <img
-                  src={currentUser?.avatar}
-                  alt={currentUser?.name}
-                  className="w-9 h-9 rounded-xl object-cover border border-white/10"
-                />
+                {currentUser?.avatar ? (
+                  <img
+                    src={currentUser.avatar}
+                    alt={currentUser?.name}
+                    className="w-9 h-9 rounded-xl object-cover border border-white/10"
+                  />
+                ) : (
+                  <div className="w-9 h-9 rounded-xl bg-gradient-purple-blue flex items-center justify-center text-white font-bold text-sm shrink-0">
+                    {currentUser?.name?.charAt(0)?.toUpperCase() || "A"}
+                  </div>
+                )}
                 <div className="hidden sm:block">
                   <p className="text-xs font-bold text-white leading-none">Ops Console</p>
-                  <span className="text-[9px] text-slate-500 mt-1 font-mono block">Sarah Jenkins</span>
+                  <span className="text-[9px] text-slate-500 mt-1 font-mono block">
+                    {currentUser?.name || session?.user?.name}
+                  </span>
                 </div>
               </div>
             </div>

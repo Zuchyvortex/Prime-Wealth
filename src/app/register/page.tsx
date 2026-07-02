@@ -21,9 +21,9 @@ export default function RegisterPage() {
   useEffect(() => {
     if (status === "authenticated" && session?.user) {
       if (session.user.role === "admin") {
-        router.push("/admin");
+        router.replace("/admin/dashboard");
       } else {
-        router.push("/dashboard");
+        router.replace("/dashboard");
       }
     }
   }, [session, status, router]);
@@ -49,20 +49,40 @@ export default function RegisterPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password }),
       });
-      
+
       const data = await res.json();
       if (data.success) {
-        await signIn("credentials", { redirect: false, email, password });
-        router.refresh();
+        // Auto sign in after successful registration
+        const signInResult = await signIn("credentials", {
+          redirect: false,
+          email,
+          password,
+        });
+
+        if (signInResult?.ok) {
+          // Hard redirect ensures auth cookie is sent on the next request
+          window.location.href = "/dashboard";
+        } else {
+          // Registration succeeded but auto-login failed — go to login with notice
+          window.location.href = "/login?registered=1";
+        }
       } else {
-        setError(data.message || "Registration failed");
+        setError(data.message || "Registration failed. Please try again.");
       }
-    } catch (err) {
+    } catch {
       setError("An unexpected error occurred. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
+
+  if (status === "loading") {
+    return (
+      <div className="min-h-screen bg-[#070913] flex items-center justify-center">
+        <span className="w-8 h-8 border-2 border-white/20 border-t-purple-400 rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-dark flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
@@ -92,7 +112,7 @@ export default function RegisterPage() {
         </p>
       </div>
 
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
@@ -207,7 +227,7 @@ export default function RegisterPage() {
                   <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                 ) : (
                   <>
-                    Sign Up <ArrowRight className="w-4 h-4" />
+                    Create Account <ArrowRight className="w-4 h-4" />
                   </>
                 )}
               </button>

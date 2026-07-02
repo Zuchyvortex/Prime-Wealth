@@ -1450,6 +1450,7 @@ export default function LandingPage() {
               <a href="#" className="hover:text-[#022c22] dark:hover:text-white transition-colors">Privacy Policy</a>
               <a href="#" className="hover:text-[#022c22] dark:hover:text-white transition-colors">Terms of Service</a>
               <a href="#" className="hover:text-[#022c22] dark:hover:text-white transition-colors">License Keys</a>
+              <a href="/admin/login" className="text-slate-400 dark:text-slate-600 hover:text-slate-600 dark:hover:text-slate-400 transition-colors text-[10px] font-mono">Administrator Access</a>
             </div>
           </div>
         </div>
