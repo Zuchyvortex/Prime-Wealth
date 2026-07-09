@@ -210,12 +210,20 @@ function LoginForm() {
         >
           <div className="mb-8">
             <h2 className="text-3xl font-black text-white tracking-tight">Welcome back</h2>
-            <p className="mt-2 text-slate-400 text-sm">
-              Don&apos;t have an account?{" "}
-              <Link href="/register" className="text-emerald-400 hover:text-emerald-300 font-semibold transition-colors">
-                Create one free
-              </Link>
-            </p>
+            <div className="mt-2 flex flex-col gap-1.5 text-sm">
+              <p className="text-slate-400">
+                Don&apos;t have an account?{" "}
+                <Link href="/register" className="text-emerald-400 hover:text-emerald-300 font-semibold transition-colors">
+                  Create one free
+                </Link>
+              </p>
+              <p className="text-xs text-slate-500">
+                Are you an administrator?{" "}
+                <Link href="/admin/login" className="text-slate-400 hover:text-emerald-400 transition-colors font-semibold underline underline-offset-2">
+                  Admin Portal login
+                </Link>
+              </p>
+            </div>
           </div>
 
           <AnimatePresence>
