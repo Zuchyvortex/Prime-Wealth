@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
@@ -34,7 +34,8 @@ const stats = [
   { value: "99.9%", label: "Uptime" },
 ];
 
-export default function LoginPage() {
+// Inner component that uses useSearchParams — must be in a Suspense boundary
+function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { data: session, status } = useSession();
@@ -64,17 +65,14 @@ export default function LoginPage() {
       setError("Please fill in all fields.");
       return;
     }
-
     setError("");
     setIsLoading(true);
-
     try {
       const result = await signIn("credentials", {
         redirect: false,
         email,
         password,
       });
-
       if (result?.error) {
         if (result.error === "AccountSuspended") {
           setError("Your account has been suspended. Please contact support.");
@@ -106,17 +104,14 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-[#070913] flex overflow-hidden">
-      {/* ── LEFT PANEL ── Brand showcase */}
+      {/* LEFT PANEL */}
       <div className="hidden lg:flex lg:w-1/2 xl:w-[55%] relative flex-col justify-between p-12 overflow-hidden">
-        {/* Animated mesh background */}
         <div className="absolute inset-0 bg-gradient-to-br from-emerald-950/80 via-[#070913] to-teal-950/40" />
         <div className="absolute top-0 left-0 w-full h-full">
           <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-emerald-500/10 rounded-full blur-[120px]" />
           <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-teal-500/10 rounded-full blur-[100px]" />
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-emerald-400/5 rounded-full blur-[80px]" />
         </div>
-
-        {/* Grid overlay */}
         <div
           className="absolute inset-0 opacity-[0.03]"
           style={{
@@ -139,27 +134,20 @@ export default function LoginPage() {
 
         {/* Hero content */}
         <div className="relative z-10 flex-1 flex flex-col justify-center py-12">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7 }}
-          >
+          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
             <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-emerald-500/10 border border-emerald-500/20 rounded-full mb-6">
               <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
               <span className="text-xs font-semibold text-emerald-400 uppercase tracking-widest">Premium Wealth Platform</span>
             </div>
             <h1 className="text-4xl xl:text-5xl font-black text-white leading-tight mb-6">
               Your wealth,<br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400">
-                intelligently managed.
-              </span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400">intelligently managed.</span>
             </h1>
             <p className="text-slate-400 text-lg leading-relaxed max-w-md mb-10">
               Access your portfolio, track investments, and grow your wealth with institutional-grade tools — all in one place.
             </p>
           </motion.div>
 
-          {/* Feature list */}
           <div className="grid grid-cols-1 gap-4 mb-12">
             {features.map((f, i) => (
               <motion.div
@@ -180,7 +168,6 @@ export default function LoginPage() {
             ))}
           </div>
 
-          {/* Stats */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -196,7 +183,6 @@ export default function LoginPage() {
           </motion.div>
         </div>
 
-        {/* Bottom trust badge */}
         <div className="relative z-10">
           <div className="flex items-center gap-2 text-xs text-slate-600">
             <ShieldCheck className="w-4 h-4 text-emerald-600" />
@@ -205,17 +191,14 @@ export default function LoginPage() {
         </div>
       </div>
 
-      {/* ── RIGHT PANEL ── Login form */}
+      {/* RIGHT PANEL */}
       <div className="flex-1 flex flex-col justify-center px-6 sm:px-12 lg:px-16 xl:px-24 py-12 relative">
-        {/* Mobile logo */}
         <div className="lg:hidden mb-8">
           <Link href="/" className="flex items-center gap-3 justify-center">
             <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center">
               <ShieldCheck className="w-5 h-5 text-white" />
             </div>
-            <span className="text-xl font-bold text-white">
-              Prime<span className="text-emerald-400">Wealth</span>
-            </span>
+            <span className="text-xl font-bold text-white">Prime<span className="text-emerald-400">Wealth</span></span>
           </Link>
         </div>
 
@@ -235,7 +218,6 @@ export default function LoginPage() {
             </p>
           </div>
 
-          {/* Alerts */}
           <AnimatePresence>
             {registered && !error && (
               <motion.div
@@ -264,11 +246,8 @@ export default function LoginPage() {
           </AnimatePresence>
 
           <form className="space-y-5" onSubmit={handleSubmit}>
-            {/* Email */}
             <div>
-              <label htmlFor="email" className="block text-sm font-semibold text-slate-300 mb-2">
-                Email address
-              </label>
+              <label htmlFor="email" className="block text-sm font-semibold text-slate-300 mb-2">Email address</label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                   <Mail className="h-4.5 w-4.5 text-slate-500" />
@@ -287,15 +266,10 @@ export default function LoginPage() {
               </div>
             </div>
 
-            {/* Password */}
             <div>
               <div className="flex justify-between items-center mb-2">
-                <label htmlFor="password" className="block text-sm font-semibold text-slate-300">
-                  Password
-                </label>
-                <Link href="/forgot-password" className="text-xs text-emerald-400 hover:text-emerald-300 transition-colors font-medium">
-                  Forgot password?
-                </Link>
+                <label htmlFor="password" className="block text-sm font-semibold text-slate-300">Password</label>
+                <Link href="/forgot-password" className="text-xs text-emerald-400 hover:text-emerald-300 transition-colors font-medium">Forgot password?</Link>
               </div>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -322,27 +296,20 @@ export default function LoginPage() {
               </div>
             </div>
 
-            {/* Remember me */}
-            <div className="flex items-center justify-between">
+            <div>
               <label className="flex items-center gap-3 cursor-pointer group">
-                <div className="relative">
-                  <input
-                    type="checkbox"
-                    checked={rememberMe}
-                    onChange={(e) => setRememberMe(e.target.checked)}
-                    className="sr-only peer"
-                  />
-                  <div className="w-5 h-5 rounded-md border border-white/15 bg-white/5 peer-checked:bg-emerald-500 peer-checked:border-emerald-500 transition-all flex items-center justify-center">
-                    {rememberMe && <CheckCircle2 className="w-3.5 h-3.5 text-white" />}
-                  </div>
+                <div
+                  onClick={() => setRememberMe(!rememberMe)}
+                  className={`w-5 h-5 rounded-md border transition-all flex items-center justify-center cursor-pointer shrink-0 ${
+                    rememberMe ? "bg-emerald-500 border-emerald-500" : "border-white/15 bg-white/5"
+                  }`}
+                >
+                  {rememberMe && <CheckCircle2 className="w-3.5 h-3.5 text-white" />}
                 </div>
-                <span className="text-sm text-slate-400 group-hover:text-slate-300 transition-colors">
-                  Remember me for 30 days
-                </span>
+                <span className="text-sm text-slate-400 group-hover:text-slate-300 transition-colors">Remember me for 30 days</span>
               </label>
             </div>
 
-            {/* Submit */}
             <button
               type="submit"
               id="login-submit-btn"
@@ -350,30 +317,19 @@ export default function LoginPage() {
               className="w-full flex justify-center items-center gap-2.5 py-3.5 px-6 rounded-2xl text-sm font-bold text-white bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:ring-offset-2 focus:ring-offset-[#070913] disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 active:scale-[0.98] cursor-pointer mt-2"
             >
               {isLoading ? (
-                <>
-                  <span className="w-4.5 h-4.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  Signing in...
-                </>
+                <><span className="w-4.5 h-4.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />Signing in...</>
               ) : (
-                <>
-                  Sign In to Dashboard
-                  <ArrowRight className="w-4.5 h-4.5" />
-                </>
+                <>Sign In to Dashboard<ArrowRight className="w-4.5 h-4.5" /></>
               )}
             </button>
           </form>
 
-          {/* Divider */}
           <div className="mt-8 pt-6 border-t border-white/6">
             <p className="text-center text-xs text-slate-600">
               By signing in, you agree to our{" "}
-              <a href="#" className="text-slate-500 hover:text-slate-400 transition-colors underline underline-offset-2">
-                Terms of Service
-              </a>{" "}
-              and{" "}
-              <a href="#" className="text-slate-500 hover:text-slate-400 transition-colors underline underline-offset-2">
-                Privacy Policy
-              </a>
+              <a href="#" className="text-slate-500 hover:text-slate-400 transition-colors underline underline-offset-2">Terms of Service</a>
+              {" "}and{" "}
+              <a href="#" className="text-slate-500 hover:text-slate-400 transition-colors underline underline-offset-2">Privacy Policy</a>
             </p>
             <div className="flex items-center justify-center gap-1.5 mt-4">
               <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
@@ -383,5 +339,20 @@ export default function LoginPage() {
         </motion.div>
       </div>
     </div>
+  );
+}
+
+// Exported default wraps LoginForm in Suspense (required by Next.js for useSearchParams)
+export default function LoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-[#070913] flex items-center justify-center">
+          <span className="w-8 h-8 border-2 border-white/20 border-t-emerald-400 rounded-full animate-spin" />
+        </div>
+      }
+    >
+      <LoginForm />
+    </Suspense>
   );
 }
