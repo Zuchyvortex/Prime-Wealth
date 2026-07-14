@@ -6,18 +6,23 @@ const prisma = new PrismaClient();
 async function main() {
   console.log("🌱 Seeding database...");
 
-  const adminPassword = await bcrypt.hash("admin123", 12);
+  const adminEmail = process.env.ADMIN_EMAIL;
+  const adminPasswordPlain = process.env.ADMIN_PASSWORD;
+
+  if (!adminEmail || !adminPasswordPlain) {
+    console.log("⚠️  ADMIN_EMAIL or ADMIN_PASSWORD environment variables not set. Skipping admin creation.");
+    return;
+  }
+
+  const adminPassword = await bcrypt.hash(adminPasswordPlain, 12);
 
   // ── ADMIN ACCOUNT ──────────────────────────────────────────────
-  // This is the ONLY account created by the seed.
-  // All regular user accounts must be created via /register.
-  // Admin accounts must NEVER be created via public registration.
   const admin = await prisma.user.upsert({
-    where: { email: "admin@primewealth.com" },
+    where: { email: adminEmail },
     update: {},
     create: {
-      name: "Sarah Jenkins",
-      email: "admin@primewealth.com",
+      name: "System Administrator",
+      email: adminEmail,
       password: adminPassword,
       role: "admin",
       status: "active",
@@ -26,21 +31,13 @@ async function main() {
       savings: 0,
       investments: 0,
       avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=admin",
-      phone: "+1 (555) 000-0001",
+      phone: "+1 (555) 000-0000",
       job: "System Administrator",
     },
   });
-  console.log(`✅ Admin created: ${admin.email}`);
+  console.log(`✅ Admin verified: ${admin.email}`);
 
   console.log("\n🎉 Seeding complete!");
-  console.log("\n📋 Admin Credentials:");
-  console.log("─────────────────────────────────────────");
-  console.log("  URL:      /admin/login");
-  console.log("  Email:    admin@primewealth.com");
-  console.log("  Password: admin123");
-  console.log("─────────────────────────────────────────");
-  console.log("\n⚠️  Change the admin password after first login.");
-  console.log("   Regular users: register via /register\n");
 }
 
 main()
