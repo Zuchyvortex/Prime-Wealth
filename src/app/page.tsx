@@ -314,12 +314,12 @@ export default function LandingPage() {
             {/* Right side controls */}
             <div className="hidden md:flex items-center space-x-5">
               <ThemeToggle />
-              <button onClick={() => router.push('/login')} className="text-sm font-semibold text-slate-700 dark:text-slate-300 hover:text-[#10b981] dark:hover:text-white transition-colors cursor-pointer">
+              <Link href="/login" onClick={() => window.location.href = '/login'} className="text-sm font-semibold text-slate-700 dark:text-slate-300 hover:text-[#10b981] dark:hover:text-white transition-colors cursor-pointer">
                 Login
-              </button>
-              <button onClick={() => router.push('/register')} className="inline-flex items-center justify-center px-4.5 py-2.5 rounded-xl text-sm font-bold text-[#022c22] bg-[#96F226] hover:bg-[#82df1e] hover:scale-[1.03] active:scale-[0.98] transition-all shadow-md shadow-brand-neon-green/10 cursor-pointer">
+              </Link>
+              <Link href="/register" onClick={() => window.location.href = '/register'} className="inline-flex items-center justify-center px-4.5 py-2.5 rounded-xl text-sm font-bold text-[#022c22] bg-[#96F226] hover:bg-[#82df1e] hover:scale-[1.03] active:scale-[0.98] transition-all shadow-md shadow-brand-neon-green/10 cursor-pointer">
                 Register
-              </button>
+              </Link>
             </div>
 
             {/* Mobile Menu Toggle & ThemeToggle */}
@@ -380,18 +380,20 @@ export default function LandingPage() {
                 Support
               </a>
               <div className="pt-4 flex flex-col gap-3">
-                <button 
-                  onClick={() => router.push('/login')}
-                  className="w-full text-center py-2.5 rounded-xl border border-slate-200 dark:border-white/10 text-sm font-semibold hover:bg-slate-50 dark:hover:bg-white/5 transition-colors cursor-pointer"
+                <Link 
+                  href="/login"
+                  onClick={() => window.location.href = '/login'}
+                  className="w-full text-center py-2.5 rounded-xl border border-slate-200 dark:border-white/10 text-sm font-semibold hover:bg-slate-50 dark:hover:bg-white/5 transition-colors cursor-pointer block"
                 >
                   Login
-                </button>
-                <button 
-                  onClick={() => router.push('/register')}
-                  className="w-full text-center py-2.5 rounded-xl bg-[#96F226] text-sm font-bold text-[#022c22] shadow-lg shadow-brand-neon-green/10 cursor-pointer"
+                </Link>
+                <Link 
+                  href="/register"
+                  onClick={() => window.location.href = '/register'}
+                  className="w-full text-center py-2.5 rounded-xl bg-[#96F226] text-sm font-bold text-[#022c22] shadow-lg shadow-brand-neon-green/10 cursor-pointer block"
                 >
                   Register
-                </button>
+                </Link>
               </div>
             </motion.div>
           )}
@@ -448,9 +450,9 @@ export default function LandingPage() {
               transition={{ duration: 0.7, delay: 0.3 }}
               className="flex flex-col sm:flex-row gap-4 justify-center items-center"
             >
-              <button onClick={() => router.push('/register')} className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 rounded-xl font-extrabold text-[#022c22] bg-[#96F226] hover:bg-[#82df1e] hover:scale-[1.03] active:scale-[0.98] transition-all shadow-xl shadow-[#96F226]/10 cursor-pointer group">
+              <Link href="/register" onClick={() => window.location.href = '/register'} className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 rounded-xl font-extrabold text-[#022c22] bg-[#96F226] hover:bg-[#82df1e] hover:scale-[1.03] active:scale-[0.98] transition-all shadow-xl shadow-[#96F226]/10 cursor-pointer group">
                 Start Investing <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </button>
+              </Link>
               <a href="#investments" className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 rounded-xl font-semibold text-white border border-white/20 hover:bg-white/10 hover:border-white/30 transition-all cursor-pointer">
                 Explore Plans
               </a>
@@ -776,8 +778,9 @@ export default function LandingPage() {
                 </div>
 
                 <div className="mt-auto">
-                  <button 
-                    onClick={() => router.push('/register')} 
+                  <Link 
+                    href="/register" 
+                    onClick={() => window.location.href = '/register'}
                     className={`w-full flex items-center justify-center gap-1.5 py-3 rounded-xl text-xs font-extrabold text-center uppercase tracking-wider shadow-sm hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer ${
                       plan.highlight 
                         ? 'bg-amber-500 hover:bg-amber-600 text-slate-900' 
@@ -785,7 +788,7 @@ export default function LandingPage() {
                     }`}
                   >
                     Select Plan <ArrowUpRight className="w-3.5 h-3.5" />
-                  </button>
+                  </Link>
                 </div>
               </motion.div>
             ))}
@@ -871,9 +874,9 @@ export default function LandingPage() {
               </p>
 
               <div className="pt-4">
-                <button onClick={() => router.push('/register')} className="inline-flex items-center justify-center px-6 py-3 bg-[#022c22] hover:bg-[#064e3b] dark:bg-[#96F226] dark:hover:bg-[#82df1e] text-white dark:text-[#022c22] font-bold rounded-xl text-xs uppercase tracking-wider transition-all shadow-md cursor-pointer">
+                <Link href="/register" onClick={() => window.location.href = '/register'} className="inline-flex items-center justify-center px-6 py-3 bg-[#022c22] hover:bg-[#064e3b] dark:bg-[#96F226] dark:hover:bg-[#82df1e] text-white dark:text-[#022c22] font-bold rounded-xl text-xs uppercase tracking-wider transition-all shadow-md cursor-pointer">
                   Explore Console <ArrowRight className="ml-2 w-4 h-4" />
-                </button>
+                </Link>
               </div>
             </div>
 
@@ -1384,18 +1387,20 @@ export default function LandingPage() {
               </p>
               
               <div className="pt-6 flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <button 
-                  onClick={() => router.push('/register')}
+                <Link 
+                  href="/register"
+                  onClick={() => window.location.href = '/register'}
                   className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 bg-[#96F226] hover:bg-[#82df1e] text-[#022c22] font-bold rounded-xl shadow-2xl transition-all hover:scale-[1.03] active:scale-[0.98] cursor-pointer"
                 >
                   Create Account
-                </button>
-                <button 
-                  onClick={() => router.push('/login')}
+                </Link>
+                <Link 
+                  href="/login"
+                  onClick={() => window.location.href = '/login'}
                   className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 bg-white/10 hover:bg-white/15 text-white font-semibold rounded-xl border border-white/20 transition-all cursor-pointer"
                 >
                   Contact Support
-                </button>
+                </Link>
               </div>
             </div>
           </div>
@@ -1452,7 +1457,7 @@ export default function LandingPage() {
               <a href="#" className="hover:text-[#022c22] dark:hover:text-white transition-colors">Privacy Policy</a>
               <a href="#" className="hover:text-[#022c22] dark:hover:text-white transition-colors">Terms of Service</a>
               <a href="#" className="hover:text-[#022c22] dark:hover:text-white transition-colors">License Keys</a>
-              <button onClick={() => router.push('/admin/login')} className="text-slate-400 dark:text-slate-600 hover:text-slate-600 dark:hover:text-slate-400 transition-colors text-[10px] font-mono cursor-pointer">Administrator Access</button>
+              <Link href="/admin/login" onClick={() => window.location.href = '/admin/login'} className="text-slate-400 dark:text-slate-600 hover:text-slate-600 dark:hover:text-slate-400 transition-colors text-[10px] font-mono cursor-pointer">Administrator Access</Link>
             </div>
           </div>
         </div>
