@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import useSWR from "swr";
@@ -340,11 +341,24 @@ export default function LandingPage() {
       {/* 2. HERO SECTION */}
       <section 
         className="relative text-white pt-20 pb-32 sm:pt-28 sm:pb-40 rounded-b-[40px] md:rounded-b-[60px] overflow-hidden"
-        style={{ background: 'radial-gradient(circle at 20% 30%, #022c22 0%, #064e3b 40%, #053b2d 70%, #032018 100%)' }}
       >
+        {/* Background Image & Overlay */}
+        <div className="absolute inset-0 w-full h-full z-0">
+          <Image
+            src="/hero-bg.jpg"
+            alt="Prime Wealth Dashboard Environment"
+            fill
+            priority
+            className="object-cover object-center"
+            quality={90}
+          />
+          {/* Subtle dark gradient overlay to ensure text readability */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#032018]/85 via-[#022c22]/75 to-[#032018]/95" />
+        </div>
+
         {/* Glow lights */}
-        <div className="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] bg-[#10b981]/10 rounded-full blur-[150px] pointer-events-none animate-pulse-glow" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[550px] h-[550px] bg-[#96F226]/5 rounded-full blur-[130px] pointer-events-none" />
+        <div className="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] bg-[#10b981]/15 rounded-full blur-[150px] pointer-events-none animate-pulse-glow z-0" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[550px] h-[550px] bg-[#96F226]/10 rounded-full blur-[130px] pointer-events-none z-0" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center max-w-4xl mx-auto mb-16 sm:mb-20">
