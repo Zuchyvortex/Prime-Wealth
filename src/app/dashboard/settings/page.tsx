@@ -50,7 +50,7 @@ export default function SettingsPage() {
 
   const uploadToCloudinary = async (file: File) => {
     if (!CLOUD_NAME || !UPLOAD_PRESET || CLOUD_NAME === "your_cloudinary_cloud_name") {
-      setFeedback({ type: "error", message: "Cloudinary is not configured. Please add NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME and NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET to your .env file." });
+      setFeedback({ type: "error", message: "Image upload is temporarily unavailable. Please try again later." });
       return;
     }
 

@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Search, ShieldAlert, ShieldCheck, Award, Coins, X, Check, AlertCircle } from "lucide-react";
 import useSWR from "swr";
 import { motion, AnimatePresence } from "framer-motion";
+import { INVESTMENT_PLANS } from "@/lib/config";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -99,13 +100,16 @@ export default function AdminUsersPage() {
   };
 
   const getTierStyle = (tier: string) => {
-    switch (tier) {
+    switch (tier?.toLowerCase()) {
       case "elite":
-        return "bg-pink-500/10 text-pink-400 border-pink-500/20";
+        return "bg-amber-500/10 text-amber-400 border-amber-500/20";
       case "growth":
-        return "bg-purple-500/10 text-purple-400 border-purple-500/20";
+        return "bg-brand-emerald/10 text-brand-emerald border-brand-emerald/20";
+      case "ultimate":
+        return "bg-emerald-900/40 text-emerald-300 border-emerald-500/30";
+      case "starter":
       default:
-        return "bg-blue-500/10 text-blue-400 border-blue-500/20";
+        return "bg-slate-500/10 text-slate-400 border-slate-500/20";
     }
   };
 
@@ -219,13 +223,13 @@ export default function AdminUsersPage() {
 
                           {/* Tier Adjustment */}
                           <select
-                            value={u.tier}
+                            value={u.tier?.toLowerCase() || "starter"}
                             onChange={(e) => adminUpdateUserTier(u.email, e.target.value)}
                             className="px-2 py-1 bg-[#090c16] border border-white/10 rounded-lg text-[9px] font-bold text-slate-300 focus:outline-none focus:border-purple-500 cursor-pointer"
                           >
-                            <option value="starter">Starter</option>
-                            <option value="growth">Growth</option>
-                            <option value="elite">Elite</option>
+                            {INVESTMENT_PLANS.map(plan => (
+                              <option key={plan.id} value={plan.id.toLowerCase()}>{plan.id}</option>
+                            ))}
                           </select>
 
                           {/* Block/Unblock toggle */}

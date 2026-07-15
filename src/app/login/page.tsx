@@ -217,12 +217,6 @@ function LoginForm() {
                   Create one free
                 </Link>
               </p>
-              <p className="text-xs text-slate-500">
-                Are you an administrator?{" "}
-                <Link href="/admin/login" className="text-slate-400 hover:text-emerald-400 transition-colors font-semibold underline underline-offset-2">
-                  Admin Portal login
-                </Link>
-              </p>
             </div>
           </div>
 
@@ -338,6 +332,9 @@ function LoginForm() {
               <a href="#" className="text-slate-500 hover:text-slate-400 transition-colors underline underline-offset-2">Terms of Service</a>
               {" "}and{" "}
               <a href="#" className="text-slate-500 hover:text-slate-400 transition-colors underline underline-offset-2">Privacy Policy</a>
+            </p>
+            <p className="text-center text-xs text-slate-600 mt-2">
+              <Link href="/admin/login" className="hover:text-slate-400 transition-colors">Administrator Login</Link>
             </p>
             <div className="flex items-center justify-center gap-1.5 mt-4">
               <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />

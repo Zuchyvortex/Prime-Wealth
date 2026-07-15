@@ -22,32 +22,6 @@ import {
 } from "lucide-react";
 import { signIn, useSession } from "next-auth/react";
 
-const ADMIN_EMAIL = "admin@primewealth.com";
-const ADMIN_PASSWORD = "super_secure_admin_password";
-const ADMIN_URL = "/admin/login";
-
-function CopyButton({ text }: { text: string }) {
-  const [copied, setCopied] = useState(false);
-  const handleCopy = async () => {
-    await navigator.clipboard.writeText(text);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-  return (
-    <button
-      type="button"
-      onClick={handleCopy}
-      className="ml-auto p-1.5 rounded-lg hover:bg-white/10 text-slate-500 hover:text-slate-300 transition-all cursor-pointer shrink-0"
-      title="Copy to clipboard"
-    >
-      {copied ? (
-        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-      ) : (
-        <Copy className="w-3.5 h-3.5" />
-      )}
-    </button>
-  );
-}
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -224,46 +198,6 @@ export default function AdminLoginPage() {
             ))}
           </motion.div>
 
-          {/* ── CREDENTIALS BOX ── */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7 }}
-            className="relative rounded-2xl overflow-hidden"
-          >
-            {/* Top accent */}
-            <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-purple-500/60 to-transparent" />
-            <div className="bg-[#0a0d1a] border border-purple-500/15 rounded-2xl p-5">
-              <div className="flex items-center gap-2.5 mb-4">
-                <KeyRound className="w-4 h-4 text-purple-400" />
-                <span className="text-sm font-bold text-purple-300">Admin Credentials</span>
-                <span className="ml-auto text-[10px] font-mono text-slate-600 uppercase tracking-widest">Confidential</span>
-              </div>
-
-              <div className="space-y-3 font-mono text-sm">
-                <div className="flex items-center gap-3 p-3 bg-white/3 border border-white/6 rounded-xl">
-                  <span className="text-slate-600 text-xs w-16 shrink-0">URL</span>
-                  <span className="text-slate-300 flex-1 truncate">{ADMIN_URL}</span>
-                  <CopyButton text={ADMIN_URL} />
-                </div>
-                <div className="flex items-center gap-3 p-3 bg-white/3 border border-white/6 rounded-xl">
-                  <span className="text-slate-600 text-xs w-16 shrink-0">Email</span>
-                  <span className="text-slate-300 flex-1 truncate">{ADMIN_EMAIL}</span>
-                  <CopyButton text={ADMIN_EMAIL} />
-                </div>
-                <div className="flex items-center gap-3 p-3 bg-white/3 border border-white/6 rounded-xl">
-                  <span className="text-slate-600 text-xs w-16 shrink-0">Pass</span>
-                  <span className="text-purple-300 flex-1 font-bold">{ADMIN_PASSWORD}</span>
-                  <CopyButton text={ADMIN_PASSWORD} />
-                </div>
-              </div>
-
-              <div className="mt-4 flex items-center gap-2 p-2.5 bg-amber-500/5 border border-amber-500/15 rounded-xl">
-                <AlertTriangle className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                <span className="text-xs text-amber-500/80">Change the default password after first login.</span>
-              </div>
-            </div>
-          </motion.div>
         </div>
 
         {/* Footer */}
@@ -416,30 +350,7 @@ export default function AdminLoginPage() {
             </button>
           </form>
 
-          {/* Mobile credentials (visible only on mobile) */}
-          <div className="lg:hidden mt-8">
-            <div className="relative rounded-2xl overflow-hidden">
-              <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-purple-500/60 to-transparent" />
-              <div className="bg-[#0a0d1a] border border-purple-500/15 rounded-2xl p-5">
-                <div className="flex items-center gap-2.5 mb-4">
-                  <KeyRound className="w-4 h-4 text-purple-400" />
-                  <span className="text-sm font-bold text-purple-300">Admin Credentials</span>
-                </div>
-                <div className="space-y-3 font-mono text-sm">
-                  <div className="flex items-center gap-3 p-3 bg-white/3 border border-white/6 rounded-xl">
-                    <span className="text-slate-600 text-xs w-14 shrink-0">Email</span>
-                    <span className="text-slate-300 flex-1 truncate text-xs">{ADMIN_EMAIL}</span>
-                    <CopyButton text={ADMIN_EMAIL} />
-                  </div>
-                  <div className="flex items-center gap-3 p-3 bg-white/3 border border-white/6 rounded-xl">
-                    <span className="text-slate-600 text-xs w-14 shrink-0">Pass</span>
-                    <span className="text-purple-300 flex-1 font-bold">{ADMIN_PASSWORD}</span>
-                    <CopyButton text={ADMIN_PASSWORD} />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+
 
           {/* Footer */}
           <div className="mt-8 pt-6 border-t border-white/6 space-y-3">

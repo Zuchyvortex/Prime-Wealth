@@ -34,7 +34,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     { label: "Market Preview", icon: <LineChart className="w-5 h-5" />, href: "/dashboard/market" },
     { label: "Transactions", icon: <ArrowLeftRight className="w-5 h-5" />, href: "/dashboard/transactions" },
     { label: "Support Chat", icon: <MessageSquare className="w-5 h-5" />, href: "/dashboard/support" },
-    { label: "Guides", icon: <BookOpen className="w-5 h-5" />, href: "/dashboard/guide" },
     { label: "Settings", icon: <Settings className="w-5 h-5" />, href: "/dashboard/settings" },
   ];
 
