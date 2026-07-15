@@ -285,6 +285,12 @@ export default function RegisterPage() {
         >
           <div className="mb-8">
             <h2 className="text-3xl font-black text-white tracking-tight">Create your account</h2>
+            <p className="mt-2 text-sm text-slate-400">
+              Already have an account?{" "}
+              <Link href="/login" className="text-emerald-400 hover:text-emerald-300 font-semibold transition-colors">
+                Sign in
+              </Link>
+            </p>
           </div>
 
           {/* Error */}

@@ -83,8 +83,8 @@ export async function PATCH(request: Request) {
     if (phone !== undefined) updateData.phone = phone;
     if (job !== undefined) updateData.job = job;
     if (avatar) {
-      // Only allow Cloudinary URLs or other trusted domains
-      if (!avatar.startsWith("https://res.cloudinary.com/")) {
+      // Only allow Cloudinary URLs, data URIs, or other trusted domains
+      if (!avatar.startsWith("https://") && !avatar.startsWith("data:image/")) {
         return NextResponse.json({ error: "Invalid avatar URL." }, { status: 400 });
       }
       updateData.avatar = avatar;
