@@ -97,8 +97,8 @@ export default function ClientSupportPage() {
       {/* Support Header */}
       <div className="flex items-center justify-between p-4 border border-white/5 rounded-t-2xl bg-[#090c16]">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center border border-purple-500/20">
-            <LifeBuoy className="w-5 h-5 text-purple-400 animate-spin-slow" />
+          <div className="w-10 h-10 rounded-xl bg-brand-emerald/10 flex items-center justify-center border border-brand-emerald/20">
+            <LifeBuoy className="w-5 h-5 text-brand-emerald animate-spin-slow" />
           </div>
           <div>
             <h2 className="text-sm font-bold text-white">Live Support Room</h2>
@@ -111,7 +111,7 @@ export default function ClientSupportPage() {
           </div>
         </div>
         <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/5 text-[10px] text-slate-400">
-          <ShieldCheck className="w-3.5 h-3.5 text-purple-400" />
+          <ShieldCheck className="w-3.5 h-3.5 text-brand-emerald" />
           <span>Encrypted Session</span>
         </div>
       </div>
@@ -139,7 +139,7 @@ export default function ClientSupportPage() {
                 <div
                   className={`max-w-[75%] px-4 py-3 rounded-2xl text-sm leading-relaxed ${
                     isUser
-                      ? "bg-gradient-purple-blue text-white rounded-tr-none"
+                      ? "bg-gradient-neon text-[#022c22] rounded-tr-none"
                       : "bg-white/5 border border-white/10 text-slate-250 rounded-tl-none"
                   }`}
                 >
@@ -167,12 +167,12 @@ export default function ClientSupportPage() {
           value={inputMessage}
           onChange={(e) => setInputMessage(e.target.value)}
           placeholder="Describe your deposit, withdrawal, or yield inquiry..."
-          className="flex-1 px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-650 focus:outline-none focus:border-purple-500 text-sm font-sans"
+          className="flex-1 px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-650 focus:outline-none focus:border-brand-emerald text-sm font-sans"
         />
         <button
           type="submit"
           disabled={!inputMessage.trim() || isSending}
-          className="w-11 h-11 flex items-center justify-center rounded-xl bg-gradient-purple-blue text-white hover:brightness-110 active:scale-95 disabled:opacity-50 transition-all cursor-pointer"
+          className="w-11 h-11 flex items-center justify-center rounded-xl bg-gradient-neon text-[#022c22] hover:brightness-110 active:scale-95 disabled:opacity-50 transition-all cursor-pointer"
         >
           <Send className="w-4.5 h-4.5" />
         </button>

@@ -4,16 +4,16 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import * as z from "zod";
 
+import { PLAN_IDS, INVESTMENT_PLANS } from "@/lib/config";
+
 const investmentSchema = z.object({
-  plan: z.enum(["Starter", "Growth", "Elite"]),
+  plan: z.enum(PLAN_IDS),
   amount: z.number().positive(),
 });
 
-const PLAN_DETAILS = {
-  Starter: { roi: 5, durationDays: 7, minAmount: 500 },
-  Growth: { roi: 12, durationDays: 30, minAmount: 5000 },
-  Elite: { roi: 25, durationDays: 90, minAmount: 25000 },
-};
+const PLAN_DETAILS = Object.fromEntries(
+  INVESTMENT_PLANS.map(plan => [plan.id, { roi: plan.roi, durationDays: plan.duration, minAmount: plan.min }])
+);
 
 export async function GET() {
   try {

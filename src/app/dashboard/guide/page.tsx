@@ -17,7 +17,7 @@ const chapters = [
     title: "What is Prime Wealth?",
     desc: "An overview of the platform, its mission, and what sets it apart from traditional investment platforms.",
     time: "0:00",
-    color: "from-purple-500 to-indigo-600",
+    color: "from-brand-emerald to-indigo-600",
   },
   {
     id: 2,
@@ -57,7 +57,7 @@ const chapters = [
     title: "Security & Trust",
     desc: "How Prime Wealth protects your funds, verifies deposits, and ensures a safe platform experience.",
     time: "6:50",
-    color: "from-violet-500 to-purple-600",
+    color: "from-brand-emerald-dark to-brand-emerald-deep",
   },
 ];
 
@@ -146,7 +146,7 @@ export default function GuidePage() {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
-        className="rounded-3xl overflow-hidden border border-[var(--glass-border)] shadow-2xl shadow-purple-500/10 bg-black relative group"
+        className="rounded-3xl overflow-hidden border border-[var(--glass-border)] shadow-2xl shadow-brand-emerald/10 bg-black relative group"
       >
         {/* Cinematic overlay / gradient */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 z-10 pointer-events-none" />
@@ -199,7 +199,7 @@ export default function GuidePage() {
             className="w-full h-1.5 bg-white/20 rounded-full cursor-pointer mb-3 relative group/bar"
           >
             <div
-              className="h-full bg-gradient-purple-blue rounded-full transition-all relative"
+              className="h-full bg-gradient-neon rounded-full transition-all relative"
               style={{ width: `${progress}%` }}
             >
               <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3.5 h-3.5 bg-white rounded-full shadow-md opacity-0 group-hover/bar:opacity-100 transition-opacity" />
@@ -209,7 +209,7 @@ export default function GuidePage() {
           {/* Button row */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <button onClick={togglePlay} className="text-white hover:text-purple-300 transition-colors">
+              <button onClick={togglePlay} className="text-white hover:text-brand-neon-green transition-colors">
                 {playing ? <Pause className="w-5 h-5 fill-white" /> : <Play className="w-5 h-5 fill-white ml-0.5" />}
               </button>
               <button onClick={handleRestart} className="text-white/70 hover:text-white transition-colors">
@@ -239,7 +239,7 @@ export default function GuidePage() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.06 }}
-              className="glass rounded-2xl p-5 border border-[var(--glass-border)] hover:border-purple-500/30 transition-all group cursor-pointer"
+              className="glass rounded-2xl p-5 border border-[var(--glass-border)] hover:border-brand-emerald/30 transition-all group cursor-pointer"
             >
               <div className={`w-10 h-10 rounded-xl bg-gradient-to-r ${ch.color} flex items-center justify-center text-white mb-3 shadow-md`}>
                 {ch.icon}
@@ -285,10 +285,10 @@ export default function GuidePage() {
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="rounded-3xl p-8 bg-gradient-to-r from-purple-600/20 via-indigo-600/20 to-blue-600/20 border border-purple-500/20 flex flex-col sm:flex-row items-center justify-between gap-6"
+        className="rounded-3xl p-8 bg-gradient-to-r from-emerald-600/20 via-brand-emerald/20 to-blue-600/20 border border-brand-emerald/20 flex flex-col sm:flex-row items-center justify-between gap-6"
       >
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-purple-blue flex items-center justify-center text-white shadow-lg">
+          <div className="w-12 h-12 rounded-2xl bg-gradient-neon flex items-center justify-center text-white shadow-lg">
             <CheckCircle2 className="w-6 h-6" />
           </div>
           <div>
@@ -298,7 +298,7 @@ export default function GuidePage() {
         </div>
         <a
           href="/dashboard/wallet"
-          className="px-6 py-3 bg-gradient-purple-blue text-white rounded-xl font-semibold text-sm hover:brightness-110 transition-all shadow-md shrink-0"
+          className="px-6 py-3 bg-gradient-neon text-[#022c22] rounded-xl font-semibold text-sm hover:brightness-110 transition-all shadow-md shrink-0"
         >
           Go to Wallet →
         </a>

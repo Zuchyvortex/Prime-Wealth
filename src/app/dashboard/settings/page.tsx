@@ -219,7 +219,7 @@ export default function SettingsPage() {
             key={tab.id}
             onClick={() => { setActiveTab(tab.id as any); setFeedback({ type: "", message: "" }); }}
             className={`pb-4 px-2 border-b-2 transition-all cursor-pointer whitespace-nowrap ${
-              activeTab === tab.id ? "border-purple-500 text-purple-400" : "border-transparent text-slate-500 hover:text-foreground"
+              activeTab === tab.id ? "border-brand-emerald text-brand-emerald" : "border-transparent text-slate-500 hover:text-foreground"
             }`}
           >
             <span className="flex items-center gap-2">{tab.icon} {tab.label}</span>
@@ -237,9 +237,9 @@ export default function SettingsPage() {
               {/* Avatar preview */}
               <div className="relative shrink-0">
                 {avatarPreview ? (
-                  <img src={avatarPreview} alt="Avatar" className="w-24 h-24 rounded-full object-cover border-4 border-purple-500/30 shadow-lg shadow-purple-500/10" />
+                  <img src={avatarPreview} alt="Avatar" className="w-24 h-24 rounded-full object-cover border-4 border-brand-emerald/30 shadow-lg shadow-brand-emerald/10" />
                 ) : (
-                  <div className="w-24 h-24 rounded-full bg-gradient-purple-blue flex items-center justify-center text-white font-bold text-3xl shadow-lg">
+                  <div className="w-24 h-24 rounded-full bg-gradient-neon flex items-center justify-center text-white font-bold text-3xl shadow-lg">
                     {avatarFallback}
                   </div>
                 )}
@@ -250,7 +250,7 @@ export default function SettingsPage() {
                 )}
                 <button
                   onClick={() => fileInputRef.current?.click()}
-                  className="absolute -bottom-1 -right-1 w-8 h-8 bg-gradient-purple-blue rounded-full flex items-center justify-center text-white shadow-md hover:brightness-110 transition-all cursor-pointer"
+                  className="absolute -bottom-1 -right-1 w-8 h-8 bg-gradient-neon rounded-full flex items-center justify-center text-white shadow-md hover:brightness-110 transition-all cursor-pointer"
                 >
                   <Camera className="w-4 h-4" />
                 </button>
@@ -264,8 +264,8 @@ export default function SettingsPage() {
                 onClick={() => fileInputRef.current?.click()}
                 className={`flex-1 border-2 border-dashed rounded-2xl p-6 text-center cursor-pointer transition-all ${
                   isDragging
-                    ? "border-purple-500 bg-purple-500/10"
-                    : "border-[var(--glass-border)] hover:border-purple-500/50 hover:bg-white/5"
+                    ? "border-brand-emerald bg-brand-emerald/10"
+                    : "border-[var(--glass-border)] hover:border-brand-emerald/50 hover:bg-white/5"
                 }`}
               >
                 <Upload className="w-8 h-8 text-slate-500 mx-auto mb-2" />
@@ -291,7 +291,7 @@ export default function SettingsPage() {
                 <div>
                   <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Full Name</label>
                   <input type="text" required value={name} onChange={(e) => setName(e.target.value)}
-                    className="w-full px-4 py-2.5 bg-white/5 border border-[var(--glass-border)] rounded-xl text-foreground placeholder-slate-500 focus:outline-none focus:border-purple-500 text-sm" />
+                    className="w-full px-4 py-2.5 bg-white/5 border border-[var(--glass-border)] rounded-xl text-foreground placeholder-slate-500 focus:outline-none focus:border-brand-emerald text-sm" />
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Email Address (Immutable)</label>
@@ -303,17 +303,17 @@ export default function SettingsPage() {
                 <div>
                   <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Mobile Number</label>
                   <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+1 (555) 000-0000"
-                    className="w-full px-4 py-2.5 bg-white/5 border border-[var(--glass-border)] rounded-xl text-foreground placeholder-slate-500 focus:outline-none focus:border-purple-500 text-sm" />
+                    className="w-full px-4 py-2.5 bg-white/5 border border-[var(--glass-border)] rounded-xl text-foreground placeholder-slate-500 focus:outline-none focus:border-brand-emerald text-sm" />
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Profession / Job Title</label>
                   <input type="text" value={job} onChange={(e) => setJob(e.target.value)} placeholder="Private Equity Analyst"
-                    className="w-full px-4 py-2.5 bg-white/5 border border-[var(--glass-border)] rounded-xl text-foreground placeholder-slate-500 focus:outline-none focus:border-purple-500 text-sm" />
+                    className="w-full px-4 py-2.5 bg-white/5 border border-[var(--glass-border)] rounded-xl text-foreground placeholder-slate-500 focus:outline-none focus:border-brand-emerald text-sm" />
                 </div>
               </div>
               <div className="pt-2">
                 <button type="submit" disabled={loading}
-                  className="px-6 py-2.5 bg-gradient-purple-blue text-white rounded-xl text-sm font-semibold hover:brightness-110 active:scale-98 transition-all cursor-pointer shadow-md disabled:opacity-50">
+                  className="px-6 py-2.5 bg-gradient-neon text-[#022c22] rounded-xl text-sm font-semibold hover:brightness-110 active:scale-98 transition-all cursor-pointer shadow-md disabled:opacity-50">
                   {loading ? "Saving..." : "Save Profile Changes"}
                 </button>
               </div>
@@ -335,17 +335,17 @@ export default function SettingsPage() {
                   onClick={() => setTheme(option.id)}
                   className={`p-4 rounded-2xl border-2 text-left transition-all cursor-pointer ${
                     theme === option.id
-                      ? "border-purple-500 bg-purple-500/10"
-                      : "border-[var(--glass-border)] hover:border-purple-500/40 bg-white/5 hover:bg-white/5"
+                      ? "border-brand-emerald bg-brand-emerald/10"
+                      : "border-[var(--glass-border)] hover:border-brand-emerald/40 bg-white/5 hover:bg-white/5"
                   }`}
                 >
-                  <div className={`mb-3 w-10 h-10 rounded-xl flex items-center justify-center ${theme === option.id ? "bg-gradient-purple-blue text-white" : "bg-white/10 text-slate-400"}`}>
+                  <div className={`mb-3 w-10 h-10 rounded-xl flex items-center justify-center ${theme === option.id ? "bg-gradient-neon text-[#022c22]" : "bg-white/10 text-slate-400"}`}>
                     {option.icon}
                   </div>
                   <p className="text-sm font-bold text-foreground">{option.label}</p>
                   <p className="text-xs text-slate-500 mt-0.5">{option.desc}</p>
                   {theme === option.id && (
-                    <div className="mt-3 flex items-center gap-1.5 text-purple-400">
+                    <div className="mt-3 flex items-center gap-1.5 text-brand-emerald">
                       <CheckCircle className="w-3.5 h-3.5" />
                       <span className="text-[10px] font-bold uppercase tracking-wider">Active</span>
                     </div>
@@ -365,23 +365,23 @@ export default function SettingsPage() {
             <div>
               <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Current Password</label>
               <input type="password" required value={currentPw} onChange={(e) => setCurrentPw(e.target.value)} placeholder="••••••••"
-                className="w-full px-4 py-2.5 bg-white/5 border border-[var(--glass-border)] rounded-xl text-foreground placeholder-slate-500 focus:outline-none focus:border-purple-500 text-sm" />
+                className="w-full px-4 py-2.5 bg-white/5 border border-[var(--glass-border)] rounded-xl text-foreground placeholder-slate-500 focus:outline-none focus:border-brand-emerald text-sm" />
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">New Password</label>
                 <input type="password" required value={newPw} onChange={(e) => setNewPw(e.target.value)} placeholder="••••••••"
-                  className="w-full px-4 py-2.5 bg-white/5 border border-[var(--glass-border)] rounded-xl text-foreground placeholder-slate-500 focus:outline-none focus:border-purple-500 text-sm" />
+                  className="w-full px-4 py-2.5 bg-white/5 border border-[var(--glass-border)] rounded-xl text-foreground placeholder-slate-500 focus:outline-none focus:border-brand-emerald text-sm" />
               </div>
               <div>
                 <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Confirm New Password</label>
                 <input type="password" required value={confirmNewPw} onChange={(e) => setConfirmNewPw(e.target.value)} placeholder="••••••••"
-                  className="w-full px-4 py-2.5 bg-white/5 border border-[var(--glass-border)] rounded-xl text-foreground placeholder-slate-500 focus:outline-none focus:border-purple-500 text-sm" />
+                  className="w-full px-4 py-2.5 bg-white/5 border border-[var(--glass-border)] rounded-xl text-foreground placeholder-slate-500 focus:outline-none focus:border-brand-emerald text-sm" />
               </div>
             </div>
             <div className="pt-2">
               <button type="submit" disabled={loading}
-                className="px-6 py-2.5 bg-gradient-purple-blue text-white rounded-xl text-sm font-semibold hover:brightness-110 active:scale-98 transition-all cursor-pointer shadow-md disabled:opacity-50">
+                className="px-6 py-2.5 bg-gradient-neon text-[#022c22] rounded-xl text-sm font-semibold hover:brightness-110 active:scale-98 transition-all cursor-pointer shadow-md disabled:opacity-50">
                 {loading ? "Updating..." : "Change Access Key"}
               </button>
             </div>

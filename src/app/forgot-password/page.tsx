@@ -25,18 +25,18 @@ export default function ForgotPasswordPage() {
   return (
     <div className="min-h-screen bg-gradient-dark flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
       {/* Background gradients */}
-      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-brand-purple/10 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-brand-emerald/10 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-brand-blue/10 rounded-full blur-[120px] pointer-events-none" />
 
       <div className="sm:mx-auto sm:w-full sm:max-w-md z-10">
         <Link href="/" className="flex items-center justify-center gap-2 mb-6">
-          <div className="w-10 h-10 rounded-xl bg-gradient-purple-blue p-0.5">
+          <div className="w-10 h-10 rounded-xl bg-gradient-neon p-0.5">
             <div className="w-full h-full bg-[#070913] rounded-xl flex items-center justify-center">
-              <ShieldCheck className="w-5 h-5 text-purple-400" />
+              <ShieldCheck className="w-5 h-5 text-brand-emerald" />
             </div>
           </div>
           <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400 tracking-tight">
-            Prime<span className="text-purple-400">Wealth</span>
+            Prime<span className="text-brand-emerald">Wealth</span>
           </span>
         </Link>
         <h2 className="text-center text-3xl font-extrabold text-white tracking-tight">
@@ -44,7 +44,7 @@ export default function ForgotPasswordPage() {
         </h2>
         <p className="mt-2 text-center text-sm text-slate-400">
           Remember it?{" "}
-          <Link href="/login" className="font-medium text-purple-400 hover:text-purple-300 transition-colors">
+          <Link href="/login" className="font-medium text-brand-emerald hover:text-brand-neon-green transition-colors">
             Go back to sign in
           </Link>
         </p>
@@ -78,7 +78,7 @@ export default function ForgotPasswordPage() {
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="block w-full pl-11 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all sm:text-sm"
+                    className="block w-full pl-11 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-emerald focus:border-transparent transition-all sm:text-sm"
                     placeholder="name@example.com"
                   />
                 </div>
@@ -88,7 +88,7 @@ export default function ForgotPasswordPage() {
                 <button
                   type="submit"
                   disabled={isLoading || !email}
-                  className="w-full flex justify-center items-center gap-2 py-3 px-4 border border-transparent rounded-xl text-sm font-semibold text-white bg-gradient-purple-blue hover:brightness-110 active:brightness-95 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-purple-500/20"
+                  className="w-full flex justify-center items-center gap-2 py-3 px-4 border border-transparent rounded-xl text-sm font-semibold text-white bg-gradient-neon hover:brightness-110 active:brightness-95 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-emerald cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-brand-emerald/20"
                 >
                   {isLoading ? (
                     <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />

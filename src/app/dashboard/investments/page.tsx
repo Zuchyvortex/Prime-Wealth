@@ -10,38 +10,7 @@ import {
 
 const fetcher = (url: string) => fetch(url).then(res => res.json());
 
-const PLANS = [
-  {
-    id: "Starter",
-    name: "Starter Yield Plan",
-    roi: 5,
-    duration: 7,
-    min: 500,
-    desc: "Optimized for short-term liquidity management and initial capital deployments.",
-    color: "from-blue-500/10 to-indigo-500/10 border-blue-500/30",
-    badgeColor: "bg-blue-500/10 text-blue-400"
-  },
-  {
-    id: "Growth",
-    name: "Growth Yield Plan",
-    roi: 12,
-    duration: 30,
-    min: 5000,
-    desc: "Engineered for capital scaling portfolios with aggressive interest returns.",
-    color: "from-purple-500/20 to-indigo-500/10 border-purple-500/30",
-    badgeColor: "bg-purple-500/10 text-purple-400"
-  },
-  {
-    id: "Elite",
-    name: "Elite Treasury Yield",
-    roi: 25,
-    duration: 90,
-    min: 25000,
-    desc: "VIP yield contract designed for corporate reserves and high-net-worth vaults.",
-    color: "from-pink-500/10 to-purple-500/10 border-pink-500/30",
-    badgeColor: "bg-pink-500/10 text-pink-400"
-  }
-];
+import { INVESTMENT_PLANS as PLANS } from "@/lib/config";
 
 export default function InvestmentsPage() {
   const { data: currentUser, mutate: mutateUser } = useSWR("/api/user/profile", fetcher);
@@ -139,7 +108,7 @@ export default function InvestmentsPage() {
         </div>
         <div className="glass rounded-2xl p-6 border border-white/5">
           <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Locked Yield Assets</p>
-          <h3 className="text-2xl font-extrabold text-purple-450 mt-1">
+          <h3 className="text-2xl font-extrabold text-brand-emerald mt-1">
             {formatCurrency(currentUser?.investments || 0)}
           </h3>
           <span className="text-[9px] text-slate-550 mt-1 block font-mono">Actively gathering interest</span>
@@ -196,7 +165,7 @@ export default function InvestmentsPage() {
           <form onSubmit={handlePurchase} className="glass rounded-2xl p-6 border border-white/5 space-y-4">
             <div className="flex items-center justify-between">
               <h5 className="text-sm font-bold text-white">Allocate Capital to {activePlan.name}</h5>
-              <span className="text-xs text-purple-400 font-bold font-mono">Yield Factor: {activePlan.roi}%</span>
+              <span className="text-xs text-brand-emerald font-bold font-mono">Yield Factor: {activePlan.roi}%</span>
             </div>
 
             {errorMsg && (
@@ -229,7 +198,7 @@ export default function InvestmentsPage() {
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                   placeholder={`Min allocation: ${activePlan.min}`}
-                  className="w-full pl-9 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-purple-500 text-sm font-sans"
+                  className="w-full pl-9 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-brand-emerald text-sm font-sans"
                 />
               </div>
             </div>
@@ -237,7 +206,7 @@ export default function InvestmentsPage() {
             <button
               type="submit"
               disabled={isSubmitting || currentUser?.status === "suspended"}
-              className="w-full py-3 bg-gradient-purple-blue text-white rounded-xl text-sm font-bold hover:brightness-110 disabled:opacity-50 transition-all cursor-pointer font-sans"
+              className="w-full py-3 bg-gradient-neon text-[#022c22] rounded-xl text-sm font-bold hover:brightness-110 disabled:opacity-50 transition-all cursor-pointer font-sans"
             >
               {isSubmitting ? "Locking Funds..." : "Confirm Ledger Allocation"}
             </button>
@@ -300,7 +269,7 @@ export default function InvestmentsPage() {
                         </div>
                         <div className="w-full bg-white/5 rounded-full h-1.5 overflow-hidden">
                           <div 
-                            className="bg-gradient-to-r from-purple-500 to-indigo-500 h-full rounded-full"
+                            className="bg-gradient-to-r from-brand-emerald to-indigo-500 h-full rounded-full"
                             style={{ width: `${progress}%` }}
                           />
                         </div>

@@ -72,7 +72,7 @@ export default function UserDashboardHome() {
         );
       default:
         return (
-          <div className="w-8 h-8 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400">
+          <div className="w-8 h-8 rounded-xl bg-brand-emerald/10 flex items-center justify-center text-brand-emerald">
             <ArrowUpRight className="w-4 h-4" />
           </div>
         );
@@ -92,7 +92,7 @@ export default function UserDashboardHome() {
           </p>
         </div>
         <div className="flex items-center gap-2 text-xs font-semibold px-3.5 py-2 bg-white/5 border border-white/5 rounded-xl text-slate-350">
-          <Calendar className="w-4 h-4 text-purple-400" />
+          <Calendar className="w-4 h-4 text-brand-emerald" />
           <span>Last sync: Just now</span>
         </div>
       </div>
@@ -106,11 +106,11 @@ export default function UserDashboardHome() {
           className="glass-premium rounded-2xl p-6 relative overflow-hidden"
         >
           {/* Decorative backdrop gradients */}
-          <div className="absolute -top-10 -right-10 w-32 h-32 bg-brand-purple/10 rounded-full blur-2xl pointer-events-none" />
+          <div className="absolute -top-10 -right-10 w-32 h-32 bg-brand-emerald/10 rounded-full blur-2xl pointer-events-none" />
           
           <div className="flex justify-between items-center mb-4">
             <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Primary Vault</span>
-            <div className="p-2 bg-purple-500/10 border border-purple-500/15 rounded-xl text-purple-400">
+            <div className="p-2 bg-brand-emerald/10 border border-brand-emerald/15 rounded-xl text-brand-emerald">
               <Wallet className="w-4.5 h-4.5" />
             </div>
           </div>
@@ -188,7 +188,7 @@ export default function UserDashboardHome() {
                   onClick={() => setTimeframe(t)}
                   className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                     timeframe === t 
-                      ? "bg-gradient-purple-blue text-white shadow" 
+                      ? "bg-gradient-neon text-[#022c22] shadow" 
                       : "text-slate-400 hover:text-white"
                   }`}
                 >
@@ -261,7 +261,7 @@ export default function UserDashboardHome() {
               <h4 className="text-base font-bold text-white">Recent Activities</h4>
               <Link 
                 href="/dashboard/transactions" 
-                className="text-xs text-purple-400 hover:text-purple-300 font-semibold flex items-center transition-all"
+                className="text-xs text-brand-emerald hover:text-brand-neon-green font-semibold flex items-center transition-all"
               >
                 View all <ChevronRight className="w-3.5 h-3.5" />
               </Link>
@@ -286,7 +286,7 @@ export default function UserDashboardHome() {
                       <span className={`text-xs font-bold ${
                         tx.type === "deposit" || tx.type === "transfer_receive"
                           ? "text-emerald-400"
-                          : "text-purple-400"
+                          : "text-brand-emerald"
                       }`}>
                         {tx.type === "deposit" || tx.type === "transfer_receive" ? "+" : "-"}
                         {formatCurrency(tx.amount)}
@@ -302,9 +302,9 @@ export default function UserDashboardHome() {
           </div>
 
           {/* Quick wallet call to action card */}
-          <div className="mt-6 p-4 rounded-xl bg-gradient-to-r from-purple-500/10 to-blue-500/10 border border-purple-500/15 flex items-center justify-between">
+          <div className="mt-6 p-4 rounded-xl bg-gradient-to-r from-brand-emerald/10 to-blue-500/10 border border-brand-emerald/15 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <CreditCard className="w-5 h-5 text-purple-400" />
+              <CreditCard className="w-5 h-5 text-brand-emerald" />
               <div>
                 <h5 className="text-xs font-bold text-white">Transfer Funds</h5>
                 <p className="text-[10px] text-slate-400 mt-0.5">Execute immediate vault wiring.</p>

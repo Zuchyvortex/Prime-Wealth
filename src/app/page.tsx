@@ -11,6 +11,7 @@ import {
   Play, DollarSign, Activity, ChevronLeft, ChevronRight, HelpCircle, ArrowUpRight
 } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { INVESTMENT_PLANS } from "@/lib/config";
 
 // Animated counter component for trust stats
 function Counter({ value, suffix = "", duration = 2 }: { value: number; suffix?: string; duration?: number }) {
@@ -101,82 +102,18 @@ export default function LandingPage() {
     );
   };
 
-  const pricingPlans = [
-    {
-      id: "starter",
-      name: "Starter Yield Plan",
-      duration: "12 Days",
-      yield: "Up to 450%",
-      minDeposit: 5102.00,
-      description: "Ideal for individual crypto investors starting out in yield generation.",
-      features: [
-        "Standard security protection",
-        "Automated daily audit reports",
-        "Basic live analytics support",
-        "Digital wallet custody keys",
-        "Secure wallet ledger access"
-      ],
-      badge: "Standard",
-      highlight: false,
-      color: "from-brand-emerald-dark to-brand-emerald-deep"
-    },
-    {
-      id: "growth",
-      name: "Growth Yield Plan",
-      duration: "20 Days",
-      yield: "Up to 850%",
-      minDeposit: 10450.00,
-      description: "Designed for scaling portfolios seeking higher returns and faster clearance.",
-      features: [
-        "Advanced insurance shielding",
-        "Real-time asset optimization",
-        "Dedicated wallet dashboard",
-        "Full borderless transacting",
-        "Priority dashboard authorization"
-      ],
-      badge: "Popular",
-      highlight: false,
-      color: "from-brand-emerald-dark/80 to-brand-emerald-deep"
-    },
-    {
-      id: "elite",
-      name: "Elite Treasury Yield",
-      duration: "40 Days",
-      yield: "Up to 1030%",
-      minDeposit: 35750.00,
-      description: "Premium treasury yield optimization for high-net-worth investors.",
-      features: [
-        "Custom high-yield APY tiers",
-        "1-on-1 dedicated human support advisor",
-        "Unlimited custom vault clearances",
-        "Instant transaction authorization",
-        "Comprehensive regulatory compliance reports",
-        "Gold-plated security authentication"
-      ],
-      badge: "VIP Elite",
-      highlight: true,
-      color: "from-amber-950/40 to-amber-950/20"
-    },
-    {
-      id: "ultimate",
-      name: "Ultimate Yield Plan",
-      duration: "60 Days",
-      yield: "Up to 7000%",
-      minDeposit: 57760.00,
-      description: "Maximum efficiency yield architecture for long-term capital preservation.",
-      features: [
-        "Sovereign multi-sig vault authorization",
-        "Immediate compliance auto-clearance",
-        "VIP platform admin access privileges",
-        "Bespoke wealth growth reports",
-        "Highest tier system health priority",
-        "Zero platform performance fees"
-      ],
-      badge: "Institutional",
-      highlight: false,
-      color: "from-emerald-950/80 to-[#070913]"
-    }
-  ];
+  const pricingPlans = INVESTMENT_PLANS.map(plan => ({
+    id: plan.id.toLowerCase(),
+    name: plan.name,
+    duration: `${plan.duration} Days`,
+    yield: plan.yieldString,
+    minDeposit: plan.min,
+    description: plan.desc,
+    features: plan.features,
+    badge: plan.badge,
+    highlight: plan.highlight,
+    color: plan.color
+  }));
 
   const features = [
     {

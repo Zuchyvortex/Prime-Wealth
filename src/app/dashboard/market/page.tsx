@@ -132,7 +132,7 @@ export default function MarketRatesPage() {
               onClick={() => setActiveAssetKey(key)}
               className={`p-5 rounded-2xl border cursor-pointer transition-all flex flex-col justify-between h-36 ${
                 isActive 
-                  ? "bg-gradient-to-tr from-purple-950/40 via-[#0a0d18] to-purple-950/40 border-purple-500/50 shadow-md shadow-purple-500/5" 
+                  ? "bg-gradient-to-tr from-emerald-950/40 via-[#0a0d18] to-emerald-950/40 border-brand-emerald/50 shadow-md shadow-brand-emerald/5" 
                   : "bg-white/2 border-white/5 hover:border-white/10"
               }`}
             >
@@ -216,7 +216,7 @@ export default function MarketRatesPage() {
                 onClick={() => setTradeType("buy")}
                 className={`py-3 rounded-xl text-xs font-bold transition-all ${
                   tradeType === "buy" 
-                    ? "bg-purple-500/20 border border-purple-500/30 text-white" 
+                    ? "bg-brand-emerald/20 border border-brand-emerald/30 text-white" 
                     : "bg-white/2 border border-white/5 text-slate-400 hover:bg-white/5"
                 }`}
               >
@@ -227,7 +227,7 @@ export default function MarketRatesPage() {
                 onClick={() => setTradeType("sell")}
                 className={`py-3 rounded-xl text-xs font-bold transition-all ${
                   tradeType === "sell" 
-                    ? "bg-purple-500/20 border border-purple-500/30 text-white" 
+                    ? "bg-brand-emerald/20 border border-brand-emerald/30 text-white" 
                     : "bg-white/2 border border-white/5 text-slate-400 hover:bg-white/5"
                 }`}
               >
@@ -251,7 +251,7 @@ export default function MarketRatesPage() {
                   value={tradeAmount}
                   onChange={(e) => setTradeAmount(e.target.value)}
                   placeholder={tradeType === "buy" ? "1000.00" : "0.50"}
-                  className="w-full pl-9 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-650 focus:outline-none focus:border-purple-500 text-sm font-sans"
+                  className="w-full pl-9 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-650 focus:outline-none focus:border-brand-emerald text-sm font-sans"
                 />
               </div>
               {tradeType === "buy" && (
@@ -280,7 +280,7 @@ export default function MarketRatesPage() {
             <button
               type="submit"
               disabled={currentUser?.status === "suspended"}
-              className="w-full py-3 bg-gradient-purple-blue text-white rounded-xl text-sm font-bold hover:brightness-110 disabled:opacity-50 transition-all cursor-pointer font-sans"
+              className="w-full py-3 bg-gradient-neon text-[#022c22] rounded-xl text-sm font-bold hover:brightness-110 disabled:opacity-50 transition-all cursor-pointer font-sans"
             >
               Simulate Allocation Swap
             </button>

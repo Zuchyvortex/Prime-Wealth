@@ -236,7 +236,7 @@ export default function WalletPage() {
   const cryptoWallets = [
     { coin: "USD Mainnet Vault", symbol: "USDV", balance: currentUser?.balance || 0, rate: "$1.00", icon: "$", color: "from-blue-500 to-indigo-600" },
     { coin: "Bitcoin Ledger", symbol: "BTC", balance: 0.8402, rate: "$65,420.00", icon: "₿", color: "from-amber-500 to-orange-600" },
-    { coin: "Ethereum Ledger", symbol: "ETH", balance: 12.45, rate: "$3,450.00", icon: "Ξ", color: "from-purple-500 to-pink-600" }
+    { coin: "Ethereum Ledger", symbol: "ETH", balance: 12.45, rate: "$3,450.00", icon: "Ξ", color: "from-brand-emerald to-pink-600" }
   ];
 
   return (
@@ -264,12 +264,12 @@ export default function WalletPage() {
             onClick={() => setWithdrawModalOpen(true)}
             className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-5 py-3 border border-white/10 rounded-xl text-sm font-semibold text-slate-200 hover:bg-white/5 transition-all cursor-pointer"
           >
-            <ArrowDownLeft className="w-4 h-4 text-purple-400" />
+            <ArrowDownLeft className="w-4 h-4 text-brand-emerald" />
             Withdraw
           </button>
           <button
             onClick={() => setSendModalOpen(true)}
-            className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold text-white bg-gradient-purple-blue hover:brightness-110 active:scale-98 transition-all cursor-pointer"
+            className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold text-white bg-gradient-neon hover:brightness-110 active:scale-98 transition-all cursor-pointer"
           >
             <Send className="w-4 h-4" />
             Send Money
@@ -308,7 +308,7 @@ export default function WalletPage() {
                 whileHover={{ scale: 1.01 }}
                 className={`rounded-2xl p-6 relative overflow-hidden text-white flex flex-col justify-between h-48 border shadow-lg ${
                   card.type === "visa"
-                    ? "bg-gradient-to-tr from-slate-900 via-purple-950 to-slate-950 border-purple-500/20"
+                    ? "bg-gradient-to-tr from-slate-900 via-emerald-950 to-slate-950 border-brand-emerald/20"
                     : "bg-gradient-to-tr from-slate-950 via-slate-900 to-blue-950 border-blue-500/20"
                 }`}
               >
@@ -433,7 +433,7 @@ export default function WalletPage() {
                     value={recipientEmail}
                     onChange={(e) => setRecipientEmail(e.target.value)}
                     placeholder="recipient@primewealth.com"
-                    className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-purple-500 text-sm font-sans"
+                    className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-brand-emerald text-sm font-sans"
                   />
                 </div>
 
@@ -450,7 +450,7 @@ export default function WalletPage() {
                       value={sendAmount}
                       onChange={(e) => setSendAmount(e.target.value)}
                       placeholder="100.00"
-                      className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-purple-500 text-sm font-sans"
+                      className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-brand-emerald text-sm font-sans"
                     />
                   </div>
                   <div>
@@ -460,7 +460,7 @@ export default function WalletPage() {
                     <select
                       value={sendCategory}
                       onChange={(e) => setSendCategory(e.target.value)}
-                      className="w-full px-3 py-2.5 bg-[#090c16] border border-white/10 rounded-xl text-white focus:outline-none focus:border-purple-500 text-sm font-sans"
+                      className="w-full px-3 py-2.5 bg-[#090c16] border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-emerald text-sm font-sans"
                     >
                       <option value="Transfer">Transfer</option>
                       <option value="Investments">Investments</option>
@@ -480,7 +480,7 @@ export default function WalletPage() {
                     value={sendDesc}
                     onChange={(e) => setSendDesc(e.target.value)}
                     placeholder="Consulting fee payment"
-                    className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-purple-500 text-sm font-sans"
+                    className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-brand-emerald text-sm font-sans"
                   />
                 </div>
 
@@ -488,7 +488,7 @@ export default function WalletPage() {
                   <button
                     type="submit"
                     disabled={currentUser?.status === "suspended"}
-                    className="w-full py-3 bg-gradient-purple-blue text-white rounded-xl text-sm font-semibold hover:brightness-110 disabled:opacity-50 transition-all cursor-pointer font-sans"
+                    className="w-full py-3 bg-gradient-neon text-[#022c22] rounded-xl text-sm font-semibold hover:brightness-110 disabled:opacity-50 transition-all cursor-pointer font-sans"
                   >
                     Clear Wire Clearance
                   </button>
@@ -548,7 +548,7 @@ export default function WalletPage() {
                   <select
                     value={depositMethod}
                     onChange={(e) => setDepositMethod(e.target.value)}
-                    className="w-full px-3 py-2.5 bg-[#090c16] border border-white/10 rounded-xl text-white focus:outline-none focus:border-purple-500 text-sm font-sans"
+                    className="w-full px-3 py-2.5 bg-[#090c16] border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-emerald text-sm font-sans"
                   >
                     <option value="Bitcoin">Bitcoin (BTC)</option>
                     <option value="USDT">USDT Tether</option>
@@ -558,7 +558,7 @@ export default function WalletPage() {
                 {instructions && (
                   <div className="p-4 rounded-xl bg-white/5 border border-white/5 space-y-4">
                     <div className="flex justify-between items-center">
-                      <p className="text-[10px] text-purple-400 font-bold uppercase tracking-wider">
+                      <p className="text-[10px] text-brand-emerald font-bold uppercase tracking-wider">
                         {instructions.label}
                       </p>
                       <span className="text-[9px] px-2 py-0.5 rounded-full bg-white/10 text-slate-300 font-bold">
@@ -605,7 +605,7 @@ export default function WalletPage() {
                     value={depositAmount}
                     onChange={(e) => setDepositAmount(e.target.value)}
                     placeholder="1000.00"
-                    className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-purple-500 text-sm font-sans"
+                    className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-brand-emerald text-sm font-sans"
                   />
                 </div>
 
@@ -619,7 +619,7 @@ export default function WalletPage() {
                     value={depositProof}
                     onChange={(e) => setDepositProof(e.target.value)}
                     placeholder="Enter the exact TXID hash after sending"
-                    className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-purple-500 text-sm font-sans"
+                    className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-brand-emerald text-sm font-sans"
                   />
                 </div>
 
@@ -627,7 +627,7 @@ export default function WalletPage() {
                   <button
                     type="submit"
                     disabled={currentUser?.status === "suspended"}
-                    className="w-full py-3 bg-gradient-purple-blue text-white rounded-xl text-sm font-semibold hover:brightness-110 disabled:opacity-50 transition-all cursor-pointer font-sans"
+                    className="w-full py-3 bg-gradient-neon text-[#022c22] rounded-xl text-sm font-semibold hover:brightness-110 disabled:opacity-50 transition-all cursor-pointer font-sans"
                   >
                     Submit Deposit Request
                   </button>
@@ -687,7 +687,7 @@ export default function WalletPage() {
                   <select
                     value={withdrawMethod}
                     onChange={(e) => setWithdrawMethod(e.target.value)}
-                    className="w-full px-3 py-2.5 bg-[#090c16] border border-white/10 rounded-xl text-white focus:outline-none focus:border-purple-500 text-sm font-sans"
+                    className="w-full px-3 py-2.5 bg-[#090c16] border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-emerald text-sm font-sans"
                   >
                     <option value="Bitcoin">Bitcoin (BTC)</option>
                     <option value="USDT">USDT (ERC-20)</option>
@@ -708,7 +708,7 @@ export default function WalletPage() {
                     value={withdrawAmount}
                     onChange={(e) => setWithdrawAmount(e.target.value)}
                     placeholder="100.00"
-                    className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-purple-500 text-sm font-sans"
+                    className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-brand-emerald text-sm font-sans"
                   />
                   <span className="text-[10px] text-slate-500 mt-1 block">
                     Available Liquid balance: {formatCurrency(currentUser?.balance || 0)}
@@ -731,7 +731,7 @@ export default function WalletPage() {
                           ? "Enter your $Cashtag username" 
                           : "Enter Bank routing and Account numbers"
                     }
-                    className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-purple-500 text-sm font-sans"
+                    className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-brand-emerald text-sm font-sans"
                   />
                 </div>
 
@@ -739,7 +739,7 @@ export default function WalletPage() {
                   <button
                     type="submit"
                     disabled={currentUser?.status === "suspended"}
-                    className="w-full py-3 bg-gradient-purple-blue text-white rounded-xl text-sm font-semibold hover:brightness-110 disabled:opacity-50 transition-all cursor-pointer font-sans"
+                    className="w-full py-3 bg-gradient-neon text-[#022c22] rounded-xl text-sm font-semibold hover:brightness-110 disabled:opacity-50 transition-all cursor-pointer font-sans"
                   >
                     Submit Withdrawal Request
                   </button>

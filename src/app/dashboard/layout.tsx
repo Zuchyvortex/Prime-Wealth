@@ -62,19 +62,19 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <div className="min-h-screen bg-background text-foreground flex flex-col md:flex-row relative transition-colors duration-300">
         {/* Background glow filters */}
         <div className="absolute top-0 right-0 w-96 h-96 bg-brand-blue/5 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-brand-purple/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-brand-emerald/5 rounded-full blur-3xl pointer-events-none" />
 
         {/* DESKTOP SIDEBAR */}
         <aside className="hidden md:flex flex-col w-64 bg-background border-r border-[var(--glass-border)] sticky top-0 h-screen shrink-0 z-20">
           {/* Logo */}
           <div className="h-20 flex items-center gap-2.5 px-6 border-b border-[var(--glass-border)]">
-            <div className="w-8.5 h-8.5 rounded-lg bg-gradient-purple-blue p-0.5">
+            <div className="w-8.5 h-8.5 rounded-lg bg-gradient-neon p-0.5">
               <div className="w-full h-full bg-background rounded-lg flex items-center justify-center">
-                <ShieldCheck className="w-4.5 h-4.5 text-purple-400" />
+                <ShieldCheck className="w-4.5 h-4.5 text-brand-emerald" />
               </div>
             </div>
             <span className="text-lg font-bold tracking-tight text-foreground">
-              Prime<span className="text-purple-400">Wealth</span>
+              Prime<span className="text-brand-emerald">Wealth</span>
             </span>
           </div>
 
@@ -88,7 +88,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   href={item.href}
                   className={`flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all ${
                     active 
-                      ? "bg-gradient-purple-blue text-white shadow-md shadow-purple-500/10" 
+                      ? "bg-gradient-neon text-[#022c22] shadow-md shadow-brand-emerald/10" 
                       : "text-slate-400 hover:bg-white/5 hover:text-white"
                   }`}
                 >
@@ -106,16 +106,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 <img
                   src={currentUser.avatar}
                   alt={currentUser.name}
-                  className="w-10 h-10 rounded-full object-cover border-2 border-purple-500/30"
+                  className="w-10 h-10 rounded-full object-cover border-2 border-brand-emerald/30"
                 />
               ) : (
-                <div className="w-10 h-10 rounded-full bg-gradient-purple-blue flex items-center justify-center text-white font-bold text-sm shrink-0">
+                <div className="w-10 h-10 rounded-full bg-gradient-neon flex items-center justify-center text-white font-bold text-sm shrink-0">
                   {avatarFallback}
                 </div>
               )}
               <div className="min-w-0 flex-1">
                 <p className="text-xs font-bold text-foreground truncate">{currentUser?.name}</p>
-                <span className="inline-block mt-0.5 px-2 py-0.5 rounded bg-purple-500/10 text-[9px] font-bold text-purple-400 border border-purple-500/10 uppercase tracking-widest">
+                <span className="inline-block mt-0.5 px-2 py-0.5 rounded bg-brand-emerald/10 text-[9px] font-bold text-brand-emerald border border-brand-emerald/10 uppercase tracking-widest">
                   {currentUser?.tier}
                 </span>
               </div>
@@ -147,9 +147,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               </button>
 
               <div className="flex items-center gap-2.5 mb-8">
-                <div className="w-8.5 h-8.5 rounded-lg bg-gradient-purple-blue p-0.5">
+                <div className="w-8.5 h-8.5 rounded-lg bg-gradient-neon p-0.5">
                   <div className="w-full h-full bg-background rounded-lg flex items-center justify-center">
-                    <ShieldCheck className="w-4.5 h-4.5 text-purple-400" />
+                    <ShieldCheck className="w-4.5 h-4.5 text-brand-emerald" />
                   </div>
                 </div>
                 <span className="text-lg font-bold text-foreground">PrimeWealth</span>
@@ -165,7 +165,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                       onClick={() => setMobileSidebarOpen(false)}
                       className={`flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all ${
                         active 
-                          ? "bg-gradient-purple-blue text-white shadow-lg" 
+                          ? "bg-gradient-neon text-[#022c22] shadow-lg" 
                           : "text-slate-400 hover:bg-white/5 hover:text-white"
                       }`}
                     >
@@ -179,13 +179,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <div className="border-t border-[var(--glass-border)] pt-4 space-y-4">
                 <div className="flex items-center gap-3">
                   {currentUser?.avatar ? (
-                    <img src={currentUser.avatar} alt={currentUser.name} className="w-10 h-10 rounded-full object-cover border-2 border-purple-500/30" />
+                    <img src={currentUser.avatar} alt={currentUser.name} className="w-10 h-10 rounded-full object-cover border-2 border-brand-emerald/30" />
                   ) : (
-                    <div className="w-10 h-10 rounded-full bg-gradient-purple-blue flex items-center justify-center text-white font-bold text-sm shrink-0">{avatarFallback}</div>
+                    <div className="w-10 h-10 rounded-full bg-gradient-neon flex items-center justify-center text-white font-bold text-sm shrink-0">{avatarFallback}</div>
                   )}
                   <div>
                     <p className="text-xs font-bold text-foreground">{currentUser?.name}</p>
-                    <span className="inline-block mt-0.5 px-2 py-0.5 rounded bg-purple-500/10 text-[8px] font-bold text-purple-400 uppercase tracking-wider">{currentUser?.tier}</span>
+                    <span className="inline-block mt-0.5 px-2 py-0.5 rounded bg-brand-emerald/10 text-[8px] font-bold text-brand-emerald uppercase tracking-wider">{currentUser?.tier}</span>
                   </div>
                 </div>
                 
@@ -220,7 +220,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 <input
                   type="text"
                   placeholder="Search assets, activities..."
-                  className="w-full pl-10 pr-4 py-2 text-xs bg-white/5 border border-white/5 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all"
+                  className="w-full pl-10 pr-4 py-2 text-xs bg-white/5 border border-white/5 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-brand-emerald focus:ring-1 focus:ring-brand-emerald transition-all"
                 />
               </div>
             </div>
@@ -255,7 +255,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         {unreadCount > 0 && (
                           <button
                             onClick={() => { mutate(); }}
-                            className="text-[10px] font-semibold text-purple-400 hover:text-purple-300 transition-colors"
+                            className="text-[10px] font-semibold text-brand-emerald hover:text-brand-neon-green transition-colors"
                           >
                             Mark all read
                           </button>
@@ -273,7 +273,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                               className={`p-3 rounded-xl border transition-all cursor-pointer ${
                                 not.read 
                                   ? "bg-white/5 border-[var(--glass-border)] opacity-60" 
-                                  : "bg-purple-500/5 border-purple-500/20"
+                                  : "bg-brand-emerald/5 border-brand-emerald/20"
                               }`}
                             >
                               <div className="flex gap-2.5">
@@ -281,7 +281,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                 <div className="flex-1">
                                   <h5 className="text-xs font-bold text-foreground flex justify-between items-center">
                                     {not.title}
-                                    {!not.read && <span className="w-1.5 h-1.5 bg-purple-500 rounded-full" />}
+                                    {!not.read && <span className="w-1.5 h-1.5 bg-brand-emerald rounded-full" />}
                                   </h5>
                                   <p className="text-[10px] text-slate-500 mt-1 leading-normal">{not.message}</p>
                                   <span className="text-[8px] text-slate-500 font-mono mt-1.5 block">
@@ -304,10 +304,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   <img
                     src={currentUser.avatar}
                     alt={currentUser.name}
-                    className="w-9 h-9 rounded-full object-cover border-2 border-purple-500/30"
+                    className="w-9 h-9 rounded-full object-cover border-2 border-brand-emerald/30"
                   />
                 ) : (
-                  <div className="w-9 h-9 rounded-full bg-gradient-purple-blue flex items-center justify-center text-white font-bold text-sm shrink-0">
+                  <div className="w-9 h-9 rounded-full bg-gradient-neon flex items-center justify-center text-white font-bold text-sm shrink-0">
                     {avatarFallback}
                   </div>
                 )}

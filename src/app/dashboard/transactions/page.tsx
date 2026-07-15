@@ -75,7 +75,7 @@ export default function TransactionsPage() {
             placeholder="Search memo, reference..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 text-xs bg-white/5 border border-white/5 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all"
+            className="w-full pl-10 pr-4 py-2.5 text-xs bg-white/5 border border-white/5 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-brand-emerald focus:ring-1 focus:ring-brand-emerald transition-all"
           />
         </div>
 
@@ -84,7 +84,7 @@ export default function TransactionsPage() {
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="w-full px-3 py-2.5 bg-[#070913] border border-white/5 rounded-xl text-xs text-slate-350 focus:outline-none focus:border-purple-500 transition-all appearance-none cursor-pointer"
+            className="w-full px-3 py-2.5 bg-[#070913] border border-white/5 rounded-xl text-xs text-slate-350 focus:outline-none focus:border-brand-emerald transition-all appearance-none cursor-pointer"
           >
             <option value="all">All Categories</option>
             <option value="transfer">Transfer</option>
@@ -101,7 +101,7 @@ export default function TransactionsPage() {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="w-full px-3 py-2.5 bg-[#070913] border border-white/5 rounded-xl text-xs text-slate-350 focus:outline-none focus:border-purple-500 transition-all appearance-none cursor-pointer"
+            className="w-full px-3 py-2.5 bg-[#070913] border border-white/5 rounded-xl text-xs text-slate-350 focus:outline-none focus:border-brand-emerald transition-all appearance-none cursor-pointer"
           >
             <option value="all">All Statuses</option>
             <option value="completed">Completed</option>
@@ -142,7 +142,7 @@ export default function TransactionsPage() {
                             <ArrowDownLeft className="w-4.5 h-4.5" />
                           </div>
                         ) : (
-                          <div className="w-7 h-7 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-400">
+                          <div className="w-7 h-7 rounded-lg bg-brand-emerald/10 flex items-center justify-center text-brand-emerald">
                             <ArrowUpRight className="w-4.5 h-4.5" />
                           </div>
                         )}
@@ -174,7 +174,7 @@ export default function TransactionsPage() {
                     <td className={`py-4 px-6 text-right font-extrabold ${
                       tx.type === "deposit" || tx.type === "transfer_receive"
                         ? "text-emerald-400"
-                        : "text-purple-400"
+                        : "text-brand-emerald"
                     }`}>
                       {tx.type === "deposit" || tx.type === "transfer_receive" ? "+" : "-"}
                       {formatCurrency(tx.amount)}

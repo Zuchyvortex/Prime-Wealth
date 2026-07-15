@@ -23,7 +23,7 @@ import {
 import { signIn, useSession } from "next-auth/react";
 
 const ADMIN_EMAIL = "admin@primewealth.com";
-const ADMIN_PASSWORD = "admin123";
+const ADMIN_PASSWORD = "super_secure_admin_password";
 const ADMIN_URL = "/admin/login";
 
 function CopyButton({ text }: { text: string }) {
