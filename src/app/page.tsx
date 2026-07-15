@@ -345,7 +345,7 @@ export default function LandingPage() {
         {/* Background Image & Overlay */}
         <div className="absolute inset-0 w-full h-full z-0">
           <Image
-            src="/hero-bg.jpg"
+            src="/landing.png"
             alt="Prime Wealth Dashboard Environment"
             fill
             priority
