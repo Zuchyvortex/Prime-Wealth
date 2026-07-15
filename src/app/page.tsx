@@ -658,26 +658,14 @@ export default function LandingPage() {
       </section>
 
       {/* 4. INVESTMENT PLANS SECTION */}
-      <section id="investments" className="py-24 sm:py-32 relative overflow-hidden">
-        {/* Background Image & Overlay */}
-        <div className="absolute inset-0 w-full h-full z-0">
-          <Image
-            src="/yield plans.png"
-            alt="Yield Plans Background"
-            fill
-            className="object-cover object-center"
-            quality={90}
-          />
-          {/* Subtle dark gradient overlay to ensure text readability */}
-          <div className="absolute inset-0 bg-gradient-to-b from-[#032018]/85 via-[#022c22]/80 to-[#032018]/95" />
-        </div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <section id="investments" className="py-24 sm:py-32 relative bg-white dark:bg-brand-dark-bg">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-xs font-bold text-[#96F226] tracking-widest uppercase">Yield Contracts</h2>
-            <h3 className="text-3xl sm:text-4xl font-extrabold text-white mt-2 tracking-tight">
+            <h2 className="text-xs font-bold text-[#10b981] dark:text-[#96F226] tracking-widest uppercase">Yield Contracts</h2>
+            <h3 className="text-3xl sm:text-4xl font-extrabold text-[#022c22] dark:text-white mt-2 tracking-tight">
               Elite Prime Wealth Investment Tiers
             </h3>
-            <p className="mt-4 text-slate-300 font-light leading-relaxed">
+            <p className="mt-4 text-slate-500 dark:text-slate-400 font-light leading-relaxed">
               Unlock competitive yields with premium fixed-term contracts designed for modern portfolio managers. Spacing and thresholds are optimized for clear returns.
             </p>
           </div>
