@@ -11,8 +11,6 @@ import { useTheme } from "next-themes";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
-const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
-const UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
 
 export default function SettingsPage() {
   const { data: currentUser, mutate } = useSWR("/api/user/profile", fetcher);
@@ -49,11 +47,6 @@ export default function SettingsPage() {
   }, [currentUser]);
 
   const uploadToCloudinary = async (file: File) => {
-    if (!CLOUD_NAME || !UPLOAD_PRESET || CLOUD_NAME === "your_cloudinary_cloud_name") {
-      setFeedback({ type: "error", message: "Image upload is temporarily unavailable. Please try again later." });
-      return;
-    }
-
     const MAX_SIZE_MB = 5;
     if (file.size > MAX_SIZE_MB * 1024 * 1024) {
       setFeedback({ type: "error", message: `File is too large. Max size is ${MAX_SIZE_MB}MB.` });
@@ -68,38 +61,56 @@ export default function SettingsPage() {
     setAvatarUploading(true);
     setFeedback({ type: "", message: "" });
 
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("upload_preset", UPLOAD_PRESET);
-    formData.append("folder", "prime-wealth/avatars");
-
     try {
-      const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
-        method: "POST",
-        body: formData,
-      });
-      const data = await res.json();
+      const reader = new FileReader();
+      reader.onload = async (event) => {
+        const img = new window.Image();
+        img.onload = async () => {
+          const canvas = document.createElement('canvas');
+          const max_size = 200;
+          let width = img.width;
+          let height = img.height;
 
-      if (data.secure_url) {
-        setAvatarPreview(data.secure_url);
-        // Save URL to database
-        const patchRes = await fetch("/api/user/profile", {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ avatar: data.secure_url }),
-        });
-        if (patchRes.ok) {
-          setFeedback({ type: "success", message: "Profile picture updated successfully." });
-          mutate();
-        } else {
-          setFeedback({ type: "error", message: "Failed to save avatar to profile." });
-        }
-      } else {
-        setFeedback({ type: "error", message: data.error?.message || "Upload failed." });
-      }
+          if (width > height) {
+            if (width > max_size) {
+              height *= max_size / width;
+              width = max_size;
+            }
+          } else {
+            if (height > max_size) {
+              width *= max_size / height;
+              height = max_size;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx?.drawImage(img, 0, 0, width, height);
+
+          const dataUrl = canvas.toDataURL(file.type);
+          setAvatarPreview(dataUrl);
+
+          // Save URL to database
+          const patchRes = await fetch("/api/user/profile", {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ avatar: dataUrl }),
+          });
+          
+          if (patchRes.ok) {
+            setFeedback({ type: "success", message: "Profile picture updated successfully." });
+            mutate();
+          } else {
+            setFeedback({ type: "error", message: "Failed to save avatar to profile." });
+          }
+          setAvatarUploading(false);
+        };
+        img.src = event.target?.result as string;
+      };
+      reader.readAsDataURL(file);
     } catch {
-      setFeedback({ type: "error", message: "Network error during upload. Please try again." });
-    } finally {
+      setFeedback({ type: "error", message: "Error processing image. Please try again." });
       setAvatarUploading(false);
     }
   };

@@ -8,7 +8,7 @@ import useSWR from "swr";
 import { 
   ShieldCheck, ArrowRight, ChevronDown, Check, Star, 
   TrendingUp, Wallet, Bell, Users, Eye, Menu, X, Landmark, Lock, Globe,
-  Play, DollarSign, Activity, ChevronLeft, ChevronRight, HelpCircle, ArrowUpRight
+  DollarSign, Activity, ChevronLeft, ChevronRight, HelpCircle, ArrowUpRight
 } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { INVESTMENT_PLANS } from "@/lib/config";
@@ -49,7 +49,7 @@ export default function LandingPage() {
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
-  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
+
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
   const [hoveredPlan, setHoveredPlan] = useState<number | null>(null);
   
@@ -1058,126 +1058,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* 8. VIDEO GUIDE SECTION */}
-      <section className="py-24 sm:py-32 bg-white dark:bg-brand-dark-bg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            
-            {/* Visual: Simulated video preview */}
-            <div className="lg:col-span-7 relative">
-              <div className="absolute -inset-1 bg-gradient-to-r from-[#10b981] to-[#96F226] rounded-2xl blur-xl opacity-20" />
-              <div className="relative rounded-2xl border border-slate-200 dark:border-white/5 overflow-hidden bg-slate-900 aspect-video flex items-center justify-center group shadow-xl">
-                
-                {/* Simulated Thumbnail */}
-                <img 
-                  src="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800" 
-                  alt="Onboarding Video Thumbnail" 
-                  className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-700" 
-                />
-                
-                {/* Play Button Overlay */}
-                <button 
-                  onClick={() => setIsVideoModalOpen(true)}
-                  className="z-10 w-16 h-16 md:w-20 md:h-20 rounded-full bg-[#96F226] text-[#022c22] flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-all cursor-pointer group/btn"
-                >
-                  <Play className="w-8 h-8 md:w-10 md:h-10 fill-[#022c22] ml-1 text-[#022c22] transition-transform duration-300 group-hover/btn:scale-105" />
-                </button>
-
-                {/* Animated Ring */}
-                <div className="absolute w-28 h-28 rounded-full border border-brand-neon-green/30 animate-pulse pointer-events-none" />
-                
-                {/* Title overlay */}
-                <div className="absolute bottom-4 left-4 z-10 bg-black/60 backdrop-blur-md px-3.5 py-1.5 rounded-lg border border-white/10 flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-ping" />
-                  <span className="text-[10px] md:text-xs font-bold text-white uppercase tracking-wider">How Prime Wealth Works (3:45)</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Content: Walkthrough details */}
-            <div className="lg:col-span-5 space-y-6">
-              <h2 className="text-xs font-bold text-[#10b981] dark:text-[#96F226] tracking-widest uppercase">User Education</h2>
-              <h3 className="text-3xl font-extrabold text-[#022c22] dark:text-white tracking-tight leading-tight">
-                Walkthrough your investment roadmap
-              </h3>
-              <p className="text-slate-500 dark:text-slate-400 font-light leading-relaxed">
-                Watch our quick 3-minute tutorial guide detailing wallet management, contract yields, and security procedures to maximize your wealth custody safely.
-              </p>
-
-              <div className="space-y-4 pt-2">
-                <div className="flex items-start gap-3 text-xs">
-                  <div className="w-5 h-5 rounded-full bg-brand-emerald/15 flex items-center justify-center text-brand-emerald shrink-0 mt-0.5">
-                    <Check className="w-3.5 h-3.5" />
-                  </div>
-                  <div>
-                    <h5 className="font-bold text-[#022c22] dark:text-white">Learn to setup multi-sig credentials</h5>
-                    <p className="text-slate-450 mt-0.5">Safeguard your wallet access with hardware approvals.</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3 text-xs">
-                  <div className="w-5 h-5 rounded-full bg-brand-emerald/15 flex items-center justify-center text-brand-emerald shrink-0 mt-0.5">
-                    <Check className="w-3.5 h-3.5" />
-                  </div>
-                  <div>
-                    <h5 className="font-bold text-[#022c22] dark:text-white">Understand contract lock limits</h5>
-                    <p className="text-slate-450 mt-0.5">Explore how daily yield cycles compile profits securely.</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="pt-2">
-                <button 
-                  onClick={() => setIsVideoModalOpen(true)}
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-slate-350 dark:border-white/10 hover:border-[#10b981]/40 dark:hover:border-[#96F226]/45 text-[#022c22] dark:text-white text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 transition-all"
-                >
-                  <Play className="w-4 h-4" /> Watch Walkthrough
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Video Onboarding Dialog Modal */}
-        <AnimatePresence>
-          {isVideoModalOpen && (
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md"
-            >
-              <div className="relative w-full max-w-4xl bg-slate-900 rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
-                <button 
-                  onClick={() => setIsVideoModalOpen(false)}
-                  className="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-black/60 border border-white/10 text-white flex items-center justify-center hover:bg-white/10 transition-colors"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-                <div className="aspect-video w-full bg-slate-955 flex flex-col items-center justify-center p-8 text-center text-white">
-                  {/* Simulated onboarding video player interface */}
-                  <ShieldCheck className="w-16 h-16 text-[#96F226] mb-4 animate-bounce" />
-                  <h3 className="text-xl font-bold mb-2">Prime Wealth Onboarding Walkthrough</h3>
-                  <p className="text-slate-400 text-sm max-w-md mb-6">This onboarding guide walkthrough demonstrates secure wallet setup, active plan subscription, and dashboard controls.</p>
-                  <div className="w-full max-w-lg bg-white/5 h-2 rounded-full overflow-hidden mb-4">
-                    <motion.div 
-                      className="bg-[#96F226] h-full"
-                      initial={{ width: 0 }}
-                      animate={{ width: "100%" }}
-                      transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-                    />
-                  </div>
-                  <div className="flex gap-4 text-xs font-semibold text-slate-350">
-                    <span>STATUS: SIMULATING STREAM</span>
-                    <span>•</span>
-                    <span>1080P HD</span>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </section>
 
       {/* 9. TESTIMONIALS SECTION */}
       <section className="py-24 sm:py-32 bg-slate-50 dark:bg-[#090C16] border-t border-b border-slate-200 dark:border-white/5">

@@ -45,10 +45,10 @@ export async function POST(req: Request) {
         password: hashedPassword,
         role: "user",
         phone: phone || null,
-        balance: 10000.0,
-        savings: 2500.0,
+        balance: 0.0,
+        savings: 0.0,
         investments: 0.0,
-        tier: "starter",
+        tier: "None",
         avatar: `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(name)}`,
         job: "Wealth Advisory Member",
         cards: {
@@ -58,14 +58,14 @@ export async function POST(req: Request) {
             expiry: "09/30",
             cvv: String(Math.floor(100 + Math.random() * 900)),
             type: "visa",
-            balance: 2000.0,
+            balance: 0.0,
           },
         },
         notifications: {
           create: {
             title: "Welcome to Prime Wealth",
             message:
-              "Your premium account setup is complete. Enjoy $10,000.00 complimentary starter balance.",
+              "Your premium account setup is complete.\n\nStart your investment journey today by selecting one of our investment plans and begin growing your portfolio with our secure investment platform.",
             type: "success",
           },
         },
