@@ -26,6 +26,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     session?.user?.role === "admin" ? "/api/admin/transactions" : null,
     fetcher
   );
+  const { data: verifications } = useSWR(
+    session?.user?.role === "admin" ? "/api/admin/verifications" : null,
+    fetcher
+  );
 
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
@@ -37,6 +41,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const adminMenuItems = [
     { label: "Dashboard", icon: <LayoutDashboard className="w-5 h-5" />, href: "/admin/dashboard" },
     { label: "User Accounts", icon: <Users className="w-5 h-5" />, href: "/admin/users" },
+    { label: "KYC Documents", icon: <ShieldCheck className="w-5 h-5" />, href: "/admin/kyc" },
     { label: "Financial Ledger", icon: <Landmark className="w-5 h-5" />, href: "/admin/transactions" },
     { label: "Support Chats", icon: <MessageSquare className="w-5 h-5" />, href: "/admin/chat" },
     { label: "System Audit Logs", icon: <Scroll className="w-5 h-5" />, href: "/admin/logs" },
@@ -47,6 +52,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   };
 
   const pendingCount = (transactions || []).filter((t: any) => t.status === "pending").length;
+  const pendingKYCCount = (verifications || []).filter((v: any) => v.verificationStatus === "Pending Review").length;
 
   return (
     <ProtectedRoute adminOnly={true} loginUrl="/admin/login">
@@ -74,6 +80,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             {adminMenuItems.map((item) => {
               const active = pathname === item.href || pathname?.startsWith(item.href + "/");
               const isLedger = item.label === "Financial Ledger";
+              const isKYC = item.label === "KYC Documents";
               return (
                 <Link
                   key={item.label}
@@ -91,6 +98,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   {isLedger && pendingCount > 0 && (
                     <span className="px-2 py-0.5 text-[10px] font-bold bg-yellow-500 text-black rounded-md">
                       {pendingCount}
+                    </span>
+                  )}
+                  {isKYC && pendingKYCCount > 0 && (
+                    <span className="px-2 py-0.5 text-[10px] font-bold bg-purple-500 text-white rounded-md animate-pulse">
+                      {pendingKYCCount}
                     </span>
                   )}
                 </Link>
@@ -155,19 +167,33 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <nav className="flex-1 space-y-1.5">
                 {adminMenuItems.map((item) => {
                   const active = pathname === item.href || pathname?.startsWith(item.href + "/");
+                  const isLedger = item.label === "Financial Ledger";
+                  const isKYC = item.label === "KYC Documents";
                   return (
                     <Link
                       key={item.label}
                       href={item.href}
                       onClick={() => setMobileSidebarOpen(false)}
-                      className={`flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all ${
+                      className={`flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold transition-all ${
                         active 
                           ? "bg-gradient-purple-blue text-white shadow-lg" 
                           : "text-slate-400 hover:bg-white/5 hover:text-white"
                       }`}
                     >
-                      {item.icon}
-                      {item.label}
+                      <span className="flex items-center gap-3.5">
+                        {item.icon}
+                        {item.label}
+                      </span>
+                      {isLedger && pendingCount > 0 && (
+                        <span className="px-2 py-0.5 text-[10px] font-bold bg-yellow-500 text-black rounded-md">
+                          {pendingCount}
+                        </span>
+                      )}
+                      {isKYC && pendingKYCCount > 0 && (
+                        <span className="px-2 py-0.5 text-[10px] font-bold bg-purple-500 text-white rounded-md">
+                          {pendingKYCCount}
+                        </span>
+                      )}
                     </Link>
                   );
                 })}

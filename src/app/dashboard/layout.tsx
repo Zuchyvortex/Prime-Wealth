@@ -34,6 +34,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     { label: "Market Preview", icon: <LineChart className="w-5 h-5" />, href: "/dashboard/market" },
     { label: "Transactions", icon: <ArrowLeftRight className="w-5 h-5" />, href: "/dashboard/transactions" },
     { label: "Support Chat", icon: <MessageSquare className="w-5 h-5" />, href: "/dashboard/support" },
+    { label: "Verification KYC", icon: <ShieldCheck className="w-5 h-5" />, href: "/dashboard/verification" },
     { label: "Settings", icon: <Settings className="w-5 h-5" />, href: "/dashboard/settings" },
   ];
 
@@ -114,9 +115,28 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               )}
               <div className="min-w-0 flex-1">
                 <p className="text-xs font-bold text-foreground truncate">{currentUser?.name}</p>
-                <span className="inline-block mt-0.5 px-2 py-0.5 rounded bg-brand-emerald/10 text-[9px] font-bold text-brand-emerald border border-brand-emerald/10 uppercase tracking-widest">
-                  {currentUser?.tier}
-                </span>
+                <div className="flex flex-wrap gap-1 mt-1">
+                  <span className="inline-block px-1.5 py-0.5 rounded bg-brand-emerald/10 text-[8px] font-bold text-brand-emerald border border-brand-emerald/10 uppercase tracking-widest">
+                    {currentUser?.tier}
+                  </span>
+                  {currentUser?.status === "VERIFIED" ? (
+                    <span className="inline-block px-1.5 py-0.5 rounded bg-emerald-500/10 text-[8px] font-bold text-emerald-400 border border-emerald-500/10 uppercase tracking-widest">
+                      ✔ Verified
+                    </span>
+                  ) : currentUser?.status === "REJECTED" ? (
+                    <span className="inline-block px-1.5 py-0.5 rounded bg-red-500/10 text-[8px] font-bold text-red-400 border border-red-500/10 uppercase tracking-widest">
+                      Rejected
+                    </span>
+                  ) : currentUser?.verification?.verificationStatus === "Pending Review" ? (
+                    <span className="inline-block px-1.5 py-0.5 rounded bg-yellow-500/10 text-[8px] font-bold text-yellow-400 border border-yellow-500/10 uppercase tracking-widest">
+                      Pending
+                    </span>
+                  ) : (
+                    <span className="inline-block px-1.5 py-0.5 rounded bg-slate-500/10 text-[8px] font-bold text-slate-400 border border-slate-500/10 uppercase tracking-widest">
+                      Unverified
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
             
@@ -184,7 +204,18 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   )}
                   <div>
                     <p className="text-xs font-bold text-foreground">{currentUser?.name}</p>
-                    <span className="inline-block mt-0.5 px-2 py-0.5 rounded bg-brand-emerald/10 text-[8px] font-bold text-brand-emerald uppercase tracking-wider">{currentUser?.tier}</span>
+                    <div className="flex flex-wrap gap-1 mt-1">
+                      <span className="inline-block px-1.5 py-0.5 rounded bg-brand-emerald/10 text-[8px] font-bold text-brand-emerald uppercase tracking-wider">{currentUser?.tier}</span>
+                      {currentUser?.status === "VERIFIED" ? (
+                        <span className="inline-block px-1.5 py-0.5 rounded bg-emerald-500/10 text-[8px] font-bold text-emerald-400 uppercase tracking-wider">✔ Verified</span>
+                      ) : currentUser?.status === "REJECTED" ? (
+                        <span className="inline-block px-1.5 py-0.5 rounded bg-red-500/10 text-[8px] font-bold text-red-400 uppercase tracking-wider">Rejected</span>
+                      ) : currentUser?.verification?.verificationStatus === "Pending Review" ? (
+                        <span className="inline-block px-1.5 py-0.5 rounded bg-yellow-500/10 text-[8px] font-bold text-yellow-400 uppercase tracking-wider">Pending</span>
+                      ) : (
+                        <span className="inline-block px-1.5 py-0.5 rounded bg-slate-500/10 text-[8px] font-bold text-slate-400 uppercase tracking-wider">Unverified</span>
+                      )}
+                    </div>
                   </div>
                 </div>
                 
@@ -311,7 +342,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   </div>
                 )}
                 <div className="hidden sm:block">
-                  <p className="text-xs font-bold text-foreground leading-none">{currentUser?.name}</p>
+                  <div className="flex items-center gap-1.5">
+                    <p className="text-xs font-bold text-foreground leading-none">{currentUser?.name}</p>
+                    {currentUser?.status === "VERIFIED" && (
+                      <span className="text-[10px] text-emerald-400 font-bold" title="Verified Account">✔</span>
+                    )}
+                  </div>
                   <span className="text-[9px] text-slate-500 mt-1 font-mono block">{currentUser?.email}</span>
                 </div>
               </div>

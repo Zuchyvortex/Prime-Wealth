@@ -5,7 +5,8 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { 
   TrendingUp, Wallet, Coins, ArrowUpRight, ArrowDownLeft, 
-  Calendar, CreditCard, ChevronRight, HelpCircle, Activity 
+  Calendar, CreditCard, ChevronRight, HelpCircle, Activity,
+  ShieldCheck, ShieldAlert, Clock, Info
 } from "lucide-react";
 import useSWR from "swr";
 import { 
@@ -79,6 +80,10 @@ export default function UserDashboardHome() {
     }
   };
 
+  const userStatus = currentUser?.status || "UNVERIFIED";
+  const verificationStatus = currentUser?.verification?.verificationStatus || "Not Submitted";
+  const rejectionReason = currentUser?.verification?.rejectionReason;
+
   return (
     <div className="space-y-8">
       {/* WELCOME BANNER */}
@@ -96,6 +101,73 @@ export default function UserDashboardHome() {
           <span>Last sync: Just now</span>
         </div>
       </div>
+
+      {/* KYC NOTIFICATION BANNER */}
+      {userStatus !== "VERIFIED" && (
+        <div className="glass rounded-2xl p-5 border border-[var(--glass-border)] relative overflow-hidden transition-all duration-300">
+          {verificationStatus === "Pending Review" ? (
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="flex items-start gap-4">
+                <div className="p-3 bg-yellow-500/10 border border-yellow-500/15 rounded-xl text-yellow-400">
+                  <Clock className="w-5 h-5 animate-pulse" />
+                </div>
+                <div>
+                  <h4 className="text-sm font-bold text-white">Identity Verification Pending Review</h4>
+                  <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+                    Thank you for submitting your identity verification. Our compliance team is currently reviewing your documents.
+                  </p>
+                </div>
+              </div>
+              <Link 
+                href="/dashboard/verification"
+                className="px-4 py-2 bg-white/5 border border-white/10 hover:bg-white/10 text-white text-xs font-semibold rounded-xl transition-all whitespace-nowrap"
+              >
+                View Submission
+              </Link>
+            </div>
+          ) : verificationStatus === "Rejected" || userStatus === "REJECTED" ? (
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="flex items-start gap-4">
+                <div className="p-3 bg-red-500/10 border border-red-500/15 rounded-xl text-red-400">
+                  <ShieldAlert className="w-5 h-5" />
+                </div>
+                <div className="flex-1">
+                  <h4 className="text-sm font-bold text-white">Verification Rejected: Attention Required</h4>
+                  <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+                    Reason: <span className="text-red-400 font-semibold">{rejectionReason || "Documents could not be verified."}</span>. Please update and resubmit your KYC details.
+                  </p>
+                </div>
+              </div>
+              <Link 
+                href="/dashboard/verification"
+                className="px-4 py-2 bg-gradient-neon text-[#022c22] text-xs font-bold rounded-xl hover:brightness-110 transition-all whitespace-nowrap"
+              >
+                Resubmit KYC
+              </Link>
+            </div>
+          ) : (
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="flex items-start gap-4">
+                <div className="p-3 bg-brand-emerald/10 border border-brand-emerald/15 rounded-xl text-brand-emerald">
+                  <Info className="w-5 h-5" />
+                </div>
+                <div>
+                  <h4 className="text-sm font-bold text-white">Verify Your Identity (KYC Required)</h4>
+                  <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+                    Your account is currently Unverified. Please complete your identity verification to unlock premium investment allocations.
+                  </p>
+                </div>
+              </div>
+              <Link 
+                href="/dashboard/verification"
+                className="px-4 py-2 bg-gradient-neon text-[#022c22] text-xs font-bold rounded-xl hover:brightness-110 transition-all whitespace-nowrap shadow-md shadow-brand-emerald/10"
+              >
+                Verify Identity
+              </Link>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* QUICK BALANCE CARDS GRID */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -16,7 +16,7 @@ model User {
   balance       Float     @default(0.0)
   savings       Float     @default(0.0)
   investments   Float     @default(0.0)
-  status        String    @default("active")
+  status        String    @default("UNVERIFIED")
   tier          String    @default("starter")
   avatar        String?
   phone         String?
@@ -28,6 +28,7 @@ model User {
   notifications   Notification[]
   chatMessages    ChatMessage[]
   investmentsList Investment[]   @relation("UserInvestments")
+  verification    Verification?
 }
 
 model Card {
@@ -103,4 +104,30 @@ model Investment {
   endDate   DateTime
 
   user      User     @relation("UserInvestments", fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Verification {
+  id                 String    @id @default(uuid())
+  userId             String    @unique
+  user               User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fullName           String
+  dateOfBirth        DateTime
+  nationality        String
+  country            String
+  address            String
+  phoneNumber        String
+  occupation         String
+  idType             String
+  idNumber           String
+  expiryDate         String?
+  idFrontUrl         String
+  idBackUrl          String?
+  selfieUrl          String?
+  verificationStatus String    @default("Pending Review") // Not Submitted, Pending Review, Approved, Rejected
+  rejectionReason    String?
+  reviewedBy         String?
+  reviewedAt         DateTime?
+  submittedAt        DateTime  @default(now())
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
 }

@@ -27,7 +27,8 @@ export async function GET() {
         notifications: {
           orderBy: { date: 'desc' },
           take: 20
-        }
+        },
+        verification: true
       }
     });
 
