@@ -107,10 +107,16 @@ export default function KYCVerificationPage() {
         body: formData,
       });
 
-      const data = await res.json();
+      const text = await res.text();
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch (jsonErr) {
+        throw new Error(`Upload failed. Server responded with status ${res.status}: ${text.substring(0, 100) || "Unknown error"}`);
+      }
 
       if (!res.ok) {
-        throw new Error(data.error || "Failed to upload file");
+        throw new Error(data.message || data.error || "Failed to upload file");
       }
 
       if (type === "front") setIdFrontUrl(data.url);
