@@ -99,6 +99,47 @@ export default function KYCVerificationPage() {
     setFeedback({ type: "", message: "" });
 
     try {
+      const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+      const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || "prime_wealth_avatars";
+      const isCloudinaryConfigured = cloudName && cloudName !== "your_cloudinary_cloud_name" && cloudName.trim() !== "";
+
+      if (isCloudinaryConfigured) {
+        // Attempt direct upload to Cloudinary (bypasses Vercel 4.5MB serverless limits)
+        try {
+          const uploadFormData = new FormData();
+          uploadFormData.append("file", file);
+          uploadFormData.append("upload_preset", uploadPreset);
+
+          const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`, {
+            method: "POST",
+            body: uploadFormData,
+          });
+
+          const text = await res.text();
+          let data;
+          try {
+            data = JSON.parse(text);
+          } catch (jsonErr) {
+            throw new Error(`Direct upload parse error. Server returned ${res.status}: ${text.substring(0, 100)}`);
+          }
+
+          if (!res.ok) {
+            throw new Error(data.error?.message || "Failed direct Cloudinary upload");
+          }
+
+          const fileUrl = data.secure_url || data.url;
+          if (type === "front") setIdFrontUrl(fileUrl);
+          if (type === "back") setIdBackUrl(fileUrl);
+          if (type === "selfie") setSelfieUrl(fileUrl);
+
+          setFeedback({ type: "success", message: "Document uploaded successfully!" });
+          return; // Upload complete
+        } catch (directErr: any) {
+          console.warn("[Direct Cloudinary Upload] Failed or blocked, falling back to server upload:", directErr.message);
+        }
+      }
+
+      // Fallback: Upload via server-side /api/upload
       const formData = new FormData();
       formData.append("file", file);
 
