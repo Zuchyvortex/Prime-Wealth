@@ -92,7 +92,7 @@ export async function POST(req: Request) {
       }
 
       const data = await res.json();
-      return NextResponse.json({ success: true, url: data.secure_url });
+      return NextResponse.json({ success: true, url: data.secure_url, public_id: data.public_id });
     } catch (uploadError: any) {
       console.error("[Cloudinary Upload] Error uploading to Cloudinary, falling back to simulation:", uploadError);
       const randomId = Math.random().toString(36).substring(7);

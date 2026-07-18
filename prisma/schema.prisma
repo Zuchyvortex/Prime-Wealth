@@ -121,8 +121,11 @@ model Verification {
   idNumber           String
   expiryDate         String?
   idFrontUrl         String
+  idFrontPublicId    String?
   idBackUrl          String?
+  idBackPublicId     String?
   selfieUrl          String?
+  selfiePublicId     String?
   verificationStatus String    @default("Pending Review") // Not Submitted, Pending Review, Approved, Rejected
   rejectionReason    String?
   reviewedBy         String?

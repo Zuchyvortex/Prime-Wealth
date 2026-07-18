@@ -515,7 +515,7 @@ export default function AdminKYCManagementPage() {
                             transform: `scale(${zoom}) rotate(${rotateDeg}deg)`,
                             transition: 'transform 0.2s ease-out'
                           }}
-                          className="max-w-none shadow-2xl rounded-xl object-contain origin-center"
+                          className="max-w-full max-h-full shadow-2xl rounded-xl object-contain origin-center"
                         />
                       </div>
                     )

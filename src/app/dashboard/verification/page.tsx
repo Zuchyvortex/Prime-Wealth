@@ -38,8 +38,11 @@ export default function KYCVerificationPage() {
 
   // Upload URLs and uploading states
   const [idFrontUrl, setIdFrontUrl] = useState("");
+  const [idFrontPublicId, setIdFrontPublicId] = useState("");
   const [idBackUrl, setIdBackUrl] = useState("");
+  const [idBackPublicId, setIdBackPublicId] = useState("");
   const [selfieUrl, setSelfieUrl] = useState("");
+  const [selfiePublicId, setSelfiePublicId] = useState("");
 
   const [uploadingFront, setUploadingFront] = useState(false);
   const [uploadingBack, setUploadingBack] = useState(false);
@@ -128,9 +131,10 @@ export default function KYCVerificationPage() {
           }
 
           const fileUrl = data.secure_url || data.url;
-          if (type === "front") setIdFrontUrl(fileUrl);
-          if (type === "back") setIdBackUrl(fileUrl);
-          if (type === "selfie") setSelfieUrl(fileUrl);
+          const filePublicId = data.public_id || null;
+          if (type === "front") { setIdFrontUrl(fileUrl); setIdFrontPublicId(filePublicId); }
+          if (type === "back") { setIdBackUrl(fileUrl); setIdBackPublicId(filePublicId); }
+          if (type === "selfie") { setSelfieUrl(fileUrl); setSelfiePublicId(filePublicId); }
 
           setFeedback({ type: "success", message: "Document uploaded successfully!" });
           return; // Upload complete
@@ -160,9 +164,9 @@ export default function KYCVerificationPage() {
         throw new Error(data.message || data.error || "Failed to upload file");
       }
 
-      if (type === "front") setIdFrontUrl(data.url);
-      if (type === "back") setIdBackUrl(data.url);
-      if (type === "selfie") setSelfieUrl(data.url);
+      if (type === "front") { setIdFrontUrl(data.url); setIdFrontPublicId(data.public_id || ""); }
+      if (type === "back") { setIdBackUrl(data.url); setIdBackPublicId(data.public_id || ""); }
+      if (type === "selfie") { setSelfieUrl(data.url); setSelfiePublicId(data.public_id || ""); }
 
       setFeedback({ type: "success", message: "Document uploaded successfully!" });
     } catch (err: any) {
@@ -212,8 +216,11 @@ export default function KYCVerificationPage() {
           idNumber,
           expiryDate,
           idFrontUrl,
+          idFrontPublicId,
           idBackUrl,
+          idBackPublicId,
           selfieUrl,
+          selfiePublicId,
         }),
       });
 
