@@ -49,7 +49,7 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { verificationId, action, rejectionReason } = body;
 
-    if (!verificationId || !action || !["approve", "reject"].includes(action)) {
+    if (!verificationId || !action || !["approve", "reject", "resubmit"].includes(action)) {
       return NextResponse.json({ error: "Invalid parameters" }, { status: 400 });
     }
 
@@ -123,7 +123,7 @@ export async function POST(req: Request) {
       });
 
       return NextResponse.json({ success: true, message: "Verification approved successfully" });
-    } else {
+    } else if (action === "reject") {
       // Reject action
       if (!rejectionReason || rejectionReason.trim() === "") {
         return NextResponse.json({ error: "Rejection reason is required." }, { status: 400 });
@@ -150,8 +150,8 @@ export async function POST(req: Request) {
       await prisma.notification.create({
         data: {
           userEmail: verification.user.email,
-          title: "Identity Verification Requires Attention",
-          message: `Unfortunately, your identity verification could not be approved. Reason: ${rejectionReason}. Please visit the verification page to submit new documents.`,
+          title: "Identity Verification Rejected",
+          message: `Unfortunately, your identity verification could not be approved. Reason: ${rejectionReason}.`,
           type: "alert",
         },
       });
@@ -168,17 +168,16 @@ export async function POST(req: Request) {
       // Send email notification
       await sendEmail({
         to: verification.user.email,
-        subject: "Verification Requires Attention",
+        subject: "Identity Verification Rejected",
         html: `
           <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; rounded: 12px;">
-            <h2 style="color: #ef4444; margin-bottom: 20px;">Verification Requires Attention</h2>
+            <h2 style="color: #ef4444; margin-bottom: 20px;">Identity Verification Rejected</h2>
             <p>Hello ${verification.fullName || verification.user.name},</p>
-            <p>We are writing to let you know that our compliance team was unable to approve your identity verification submission.</p>
+            <p>We are writing to let you know that our compliance team has rejected your identity verification submission.</p>
             <div style="background-color: #fef2f2; border-left: 4px solid #ef4444; padding: 15px; margin: 20px 0; border-radius: 0 8px 8px 0;">
               <strong style="color: #991b1b; display: block; margin-bottom: 5px;">Rejection Reason:</strong>
               <p style="margin: 0; color: #7f1d1d; font-size: 14px;">${rejectionReason}</p>
             </div>
-            <p>Please log in to your dashboard and navigate to the identity verification page to submit corrected or updated documents.</p>
             <p>If you believe this was an error, please reach out via our support chat channel.</p>
             <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 20px 0;" />
             <p style="font-size: 12px; color: #64748b;">This is an automated notification. Please do not reply directly to this email.</p>
@@ -187,6 +186,69 @@ export async function POST(req: Request) {
       });
 
       return NextResponse.json({ success: true, message: "Verification rejected successfully" });
+    } else if (action === "resubmit") {
+      // Request Resubmission action
+      if (!rejectionReason || rejectionReason.trim() === "") {
+        return NextResponse.json({ error: "Resubmission reason is required." }, { status: 400 });
+      }
+
+      // Update verification record
+      await prisma.verification.update({
+        where: { id: verificationId },
+        data: {
+          verificationStatus: "Request Resubmission",
+          rejectionReason: rejectionReason,
+          reviewedBy: adminEmail,
+          reviewedAt: new Date(),
+        },
+      });
+
+      // Update user account status
+      await prisma.user.update({
+        where: { id: verification.userId },
+        data: { status: "UNVERIFIED" },
+      });
+
+      // Create internal notification
+      await prisma.notification.create({
+        data: {
+          userEmail: verification.user.email,
+          title: "Identity Verification Requires Attention",
+          message: `Your identity verification requires resubmission. Reason: ${rejectionReason}. Please visit the verification page to submit new documents.`,
+          type: "alert",
+        },
+      });
+
+      // Log in the audit log
+      await prisma.auditLog.create({
+        data: {
+          action: "KYC_RESUBMISSION_REQUESTED",
+          details: `Admin ${adminEmail} requested KYC resubmission for user ${verification.user.email}. Reason: ${rejectionReason}`,
+          adminId: session.user.id,
+        },
+      });
+
+      // Send email notification
+      await sendEmail({
+        to: verification.user.email,
+        subject: "Additional Documents Required",
+        html: `
+          <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; rounded: 12px;">
+            <h2 style="color: #f59e0b; margin-bottom: 20px;">Additional Documents Required</h2>
+            <p>Hello ${verification.fullName || verification.user.name},</p>
+            <p>We are writing to let you know that our compliance team requires additional information or clearer documents to approve your identity verification.</p>
+            <div style="background-color: #fffbeb; border-left: 4px solid #f59e0b; padding: 15px; margin: 20px 0; border-radius: 0 8px 8px 0;">
+              <strong style="color: #b45309; display: block; margin-bottom: 5px;">What needs to be corrected:</strong>
+              <p style="margin: 0; color: #92400e; font-size: 14px;">${rejectionReason}</p>
+            </div>
+            <p>Please log in to your dashboard and navigate to the identity verification page to submit the required documents.</p>
+            <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 20px 0;" />
+            <p style="font-size: 12px; color: #64748b;">This is an automated notification. Please do not reply directly to this email.</p>
+          </div>
+        `,
+      });
+
+      return NextResponse.json({ success: true, message: "Verification resubmission requested successfully" });
     }
   } catch (error) {
     console.error("[Admin Verifications POST] Error:", error);
