@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import useSWR from "swr";
 import {
   ShieldCheck, ShieldAlert, Clock, AlertTriangle, Search, Filter,
-  Check, X, FileText, Loader2, Maximize2, RotateCw, ZoomIn, ZoomOut, RotateCcw, Image as ImageIcon, ExternalLink, RefreshCw
+  Check, X, FileText, Loader2, Maximize2, RotateCw, ZoomIn, ZoomOut, RotateCcw, Image as ImageIcon, ExternalLink, RefreshCw, User
 } from "lucide-react";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
