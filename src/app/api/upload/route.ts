@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
+import { v2 as cloudinary } from "cloudinary";
 
 export async function POST(req: Request) {
   try {
@@ -42,7 +43,7 @@ export async function POST(req: Request) {
       );
     }
 
-    // Validate size (10 MB = 10 * 1024 * 1024 bytes)
+    // Validate size (10 MB)
     const MAX_SIZE = 10 * 1024 * 1024;
     if (file.size > MAX_SIZE) {
       return NextResponse.json(
@@ -61,48 +62,55 @@ export async function POST(req: Request) {
     }
 
     const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
-    const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || "prime_wealth_avatars";
+    const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || "primewealth_kyc";
 
-    // If Cloudinary credentials are dummy or missing, simulate upload
-    if (
-      !cloudName ||
-      cloudName === "your_cloudinary_cloud_name" ||
-      cloudName.trim() === ""
-    ) {
-      console.log("[Cloudinary Upload] Simulated upload due to dummy credentials.");
-      const randomId = Math.random().toString(36).substring(7);
-      const simulatedUrl = `https://res.cloudinary.com/demo/image/upload/v1234567890/mock_kyc_${randomId}_${file.name.replace(/[^a-zA-Z0-9.]/g, "_")}`;
-      return NextResponse.json({ success: true, url: simulatedUrl });
+    if (!cloudName || cloudName.trim() === "" || cloudName === "your_cloudinary_cloud_name") {
+      console.error("[Upload API] Cloudinary configuration is missing.");
+      return NextResponse.json(
+        { success: false, message: "Cloudinary configuration is missing.", error: "Configuration Error" },
+        { status: 500 }
+      );
     }
 
-    // Perform actual upload using REST API
+    console.log(`[Upload API] Upload received. Size: ${file.size}, Type: ${file.type}`);
+    console.log(`[Upload API] Cloudinary upload started for cloud: ${cloudName}, preset: ${uploadPreset}`);
+
+    cloudinary.config({ cloud_name: cloudName });
+
+    // Convert File to Buffer
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+
+    // Perform actual upload using Cloudinary Node SDK
     try {
-      const uploadFormData = new FormData();
-      uploadFormData.append("file", file);
-      uploadFormData.append("upload_preset", uploadPreset);
-
-      const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`, {
-        method: "POST",
-        body: uploadFormData,
+      const uploadResult = await new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.unsigned_upload_stream(
+          uploadPreset,
+          { resource_type: "auto" },
+          (error, result) => {
+            if (error) {
+              return reject(error);
+            }
+            resolve(result);
+          }
+        );
+        stream.end(buffer);
       });
 
-      if (!res.ok) {
-        const errText = await res.text();
-        throw new Error(errText);
-      }
+      const data = uploadResult as any;
+      console.log(`[Upload API] Cloudinary response successful. secure_url: ${data.secure_url}, public_id: ${data.public_id}`);
 
-      const data = await res.json();
-      return NextResponse.json({ success: true, url: data.secure_url, public_id: data.public_id });
+      return NextResponse.json({ 
+        success: true, 
+        url: data.secure_url, 
+        public_id: data.public_id 
+      });
     } catch (uploadError: any) {
-      console.error("[Cloudinary Upload] Error uploading to Cloudinary, falling back to simulation:", uploadError);
-      const randomId = Math.random().toString(36).substring(7);
-      const simulatedUrl = `https://res.cloudinary.com/demo/image/upload/v1234567890/mock_kyc_${randomId}_${file.name.replace(/[^a-zA-Z0-9.]/g, "_")}`;
-      return NextResponse.json({
-        success: true,
-        url: simulatedUrl,
-        note: "simulated due to Cloudinary error",
-        errorDetails: uploadError.message
-      });
+      console.error("[Upload API] Cloudinary upload failed:", uploadError);
+      return NextResponse.json(
+        { success: false, message: "Failed to upload document to cloud storage.", error: uploadError.message },
+        { status: 500 }
+      );
     }
   } catch (error: any) {
     console.error("[Upload API] Unhandled Exception:", error);
