@@ -49,11 +49,15 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { verificationId, action, rejectionReason } = body;
 
+    console.log(`[Admin Verifications POST] Incoming Request | Action: ${action} | VerificationID: ${verificationId} | Admin: ${session.user.email} (${session.user.id})`);
+
     if (!verificationId || !action || !["approve", "reject", "resubmit"].includes(action)) {
+      console.warn(`[Admin Verifications POST] Invalid parameters | Action: ${action} | VerificationID: ${verificationId}`);
       return NextResponse.json({ error: "Invalid parameters" }, { status: 400 });
     }
 
     // Find verification record
+    console.log(`[Admin Verifications POST] Fetching verification record for ID: ${verificationId}`);
     const verification = await prisma.verification.findUnique({
       where: { id: verificationId },
       include: { user: true },
@@ -65,8 +69,13 @@ export async function POST(req: Request) {
 
     const adminEmail = session.user.email || "System Admin";
 
+    console.log(`[Admin Verifications POST] Found verification. URLs -> Front: ${verification.idFrontUrl}, Back: ${verification.idBackUrl}, Selfie: ${verification.selfieUrl}`);
+
     if (action === "approve") {
+      console.log(`[Admin Verifications POST] Proceeding with APPROVE action for User: ${verification.userId}`);
+      
       // Update verification record
+      console.log(`[Admin Verifications POST] Updating verification record...`);
       await prisma.verification.update({
         where: { id: verificationId },
         data: {
@@ -78,12 +87,14 @@ export async function POST(req: Request) {
       });
 
       // Update user account status
+      console.log(`[Admin Verifications POST] Updating user status to VERIFIED...`);
       await prisma.user.update({
         where: { id: verification.userId },
         data: { status: "VERIFIED" },
       });
 
       // Create internal notification
+      console.log(`[Admin Verifications POST] Creating internal notification...`);
       await prisma.notification.create({
         data: {
           userEmail: verification.user.email,
@@ -94,6 +105,7 @@ export async function POST(req: Request) {
       });
 
       // Log in the audit log
+      console.log(`[Admin Verifications POST] Creating AuditLog entry...`);
       await prisma.auditLog.create({
         data: {
           action: "KYC_APPROVED",
@@ -248,10 +260,18 @@ export async function POST(req: Request) {
         `,
       });
 
+      console.log(`[Admin Verifications POST] Resubmission successfully processed for VerificationID: ${verificationId}`);
       return NextResponse.json({ success: true, message: "Verification resubmission requested successfully" });
     }
-  } catch (error) {
-    console.error("[Admin Verifications POST] Error:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  } catch (error: any) {
+    console.error("[Admin Verifications POST] Unhandled Exception:", error);
+    console.error("[Admin Verifications POST] Stack Trace:", error.stack);
+    
+    // Return detailed error back to client
+    return NextResponse.json({ 
+      error: "Internal server error", 
+      details: error.message,
+      stack: process.env.NODE_ENV === "development" ? error.stack : undefined 
+    }, { status: 500 });
   }
 }
