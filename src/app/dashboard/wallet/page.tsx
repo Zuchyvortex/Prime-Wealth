@@ -222,7 +222,7 @@ export default function WalletPage() {
         };
       case "USDT":
         return {
-          address: "0x4CF3C7FdfDEd9f46bb36b5EF38e16ec0ec730761",
+          address: "TUMXC6RLHNbkN1VT4Dravwbtci52n752Zx",
           label: "USDT Tether",
           network: "ERC20/TRC20 Compatible"
         };
