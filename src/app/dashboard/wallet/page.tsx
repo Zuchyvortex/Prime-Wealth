@@ -220,11 +220,18 @@ export default function WalletPage() {
           label: "Bitcoin (BTC)",
           network: "Bitcoin Network"
         };
+      case "USDT Tether ERC20":
+        return {
+          address: "0x4CF3C7FdfDEd9f46bb36b5EF38e16ec0ec730761",
+          label: "USDT Tether ERC20",
+          network: "ERC20 Network"
+        };
+      case "USDT Tether TRC20":
       case "USDT":
         return {
           address: "TUMXC6RLHNbkN1VT4Dravwbtci52n752Zx",
-          label: "USDT Tether",
-          network: "ERC20/TRC20 Compatible"
+          label: "USDT Tether TRC20",
+          network: "TRC20 Network"
         };
       default:
         return null;
@@ -551,7 +558,8 @@ export default function WalletPage() {
                     className="w-full px-3 py-2.5 bg-[#090c16] border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-emerald text-sm font-sans"
                   >
                     <option value="Bitcoin">Bitcoin (BTC)</option>
-                    <option value="USDT">USDT Tether</option>
+                    <option value="USDT Tether ERC20">USDT Tether ERC20</option>
+                    <option value="USDT Tether TRC20">USDT Tether TRC20</option>
                   </select>
                 </div>
 
