@@ -68,9 +68,10 @@ function LoginForm() {
     setError("");
     setIsLoading(true);
     try {
+      const cleanEmail = email.trim();
       const result = await signIn("credentials", {
         redirect: false,
-        email,
+        email: cleanEmail,
         password,
       });
       if (result?.error) {
@@ -81,7 +82,7 @@ function LoginForm() {
         }
         setIsLoading(false);
       } else if (result?.ok) {
-        window.location.href = "/dashboard";
+        window.location.assign("/dashboard");
       }
     } catch {
       setError("An unexpected error occurred. Please try again.");

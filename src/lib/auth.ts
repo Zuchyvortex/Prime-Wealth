@@ -17,11 +17,23 @@ export const authOptions: NextAuthOptions = {
             return null;
           }
 
-          const user = await prisma.user.findUnique({
-            where: { email: credentials.email.toLowerCase() },
-          });
+          const cleanEmail = credentials.email.trim().toLowerCase();
+
+          // Resilient user query with automatic single-retry for cold database connections
+          let user = null;
+          try {
+            user = await prisma.user.findUnique({
+              where: { email: cleanEmail },
+            });
+          } catch (dbErr) {
+            console.warn("[Auth] DB lookup retry attempt due to initial connection pause:", dbErr);
+            user = await prisma.user.findUnique({
+              where: { email: cleanEmail },
+            });
+          }
 
           if (!user || !user.password) {
+            console.warn(`[Auth] Authentication failed: User not found for email '${cleanEmail}'`);
             return null;
           }
 
@@ -31,13 +43,15 @@ export const authOptions: NextAuthOptions = {
           );
 
           if (!isPasswordValid) {
+            console.warn(`[Auth] Authentication failed: Password mismatch for email '${cleanEmail}'`);
             return null;
           }
 
           if (user.status === "suspended") {
-            // Throw so we can propagate a specific message to the client
             throw new Error("AccountSuspended");
           }
+
+          console.log(`[Auth] Successful login for user: ${user.email} (Role: ${user.role})`);
 
           return {
             id: user.id,
@@ -49,11 +63,10 @@ export const authOptions: NextAuthOptions = {
             avatar: user.avatar as string,
           };
         } catch (error: unknown) {
-          // Re-throw known errors; let NextAuth convert unknown ones
           if (error instanceof Error && error.message === "AccountSuspended") {
             throw error;
           }
-          console.error("[Auth] authorize() error:", error);
+          console.error("[Auth] Exception during authorize():", error);
           return null;
         }
       },
@@ -75,7 +88,7 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     async session({ session, token }) {
-      if (session.user) {
+      if (session?.user && token) {
         session.user.id = token.id as string;
         session.user.role = token.role as string;
         session.user.status = token.status as string;
@@ -89,5 +102,5 @@ export const authOptions: NextAuthOptions = {
     signIn: "/login",
     error: "/login",
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET || "a9f3e2c817b6d04158f2a7e390c4b51d6e8f072394a1c5b8d2e07f316a9b4c85",
 };

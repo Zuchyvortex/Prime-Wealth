@@ -72,9 +72,10 @@ export default function AdminLoginPage() {
     setIsLoading(true);
 
     try {
+      const cleanEmail = email.trim();
       const result = await signIn("credentials", {
         redirect: false,
-        email,
+        email: cleanEmail,
         password,
       });
 
@@ -83,7 +84,7 @@ export default function AdminLoginPage() {
         setError("Invalid administrator credentials. Access denied.");
         setIsLoading(false);
       } else if (result?.ok) {
-        window.location.href = "/admin/dashboard";
+        window.location.assign("/admin/dashboard");
       } else {
         setError("Authentication failed. Please try again.");
         setIsLoading(false);
