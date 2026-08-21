@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import * as z from "zod";
+import { sendPushNotification } from "@/lib/push";
 
 const balanceSchema = z.object({
   userId: z.string(),
@@ -60,15 +61,14 @@ export async function POST(req: Request) {
       }
     });
 
-    // Create User Alert Notification
-    await prisma.notification.create({
-      data: {
-        userEmail: user.email,
-        title: "Vault Balance Adjusted",
-        message: `Your asset parameters have been adjusted by administration. Updates: ${changes.join(", ")}.`,
-        type: "info"
-      }
-    });
+    // Send push notification
+    sendPushNotification({
+      userEmail: user.email,
+      title: "Vault Balance Adjusted",
+      message: `Your asset parameters have been adjusted by administration. Updates: ${changes.join(", ")}.`,
+      type: "info",
+      url: "/dashboard",
+    }).catch((e) => console.warn("Balance adjustment push failed:", e));
 
     return NextResponse.json({ success: true, message: "User balances updated and logged." });
   } catch (error) {

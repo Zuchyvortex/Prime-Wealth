@@ -284,8 +284,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         <h4 className="text-sm font-bold text-foreground">Notifications ({userNotifications.length})</h4>
                         {unreadCount > 0 && (
                           <button
-                            onClick={() => { mutate(); }}
-                            className="text-[10px] font-semibold text-brand-emerald hover:text-brand-neon-green transition-colors"
+                            onClick={async () => {
+                              await fetch("/api/notifications", {
+                                method: "PATCH",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({ markAllAsRead: true }),
+                              });
+                              mutate();
+                            }}
+                            className="text-[10px] font-semibold text-brand-emerald hover:text-brand-neon-green transition-colors cursor-pointer"
                           >
                             Mark all read
                           </button>
@@ -299,7 +306,20 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                           userNotifications.map((not: any) => (
                             <div
                               key={not.id}
-                              onClick={() => { mutate(); }}
+                              onClick={async () => {
+                                if (!not.read) {
+                                  await fetch("/api/notifications", {
+                                    method: "PATCH",
+                                    headers: { "Content-Type": "application/json" },
+                                    body: JSON.stringify({ id: not.id }),
+                                  });
+                                  mutate();
+                                }
+                                if (not.link) {
+                                  setNotificationOpen(false);
+                                  router.push(not.link);
+                                }
+                              }}
                               className={`p-3 rounded-xl border transition-all cursor-pointer ${
                                 not.read 
                                   ? "bg-white/5 border-[var(--glass-border)] opacity-60" 

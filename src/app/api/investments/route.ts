@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import * as z from "zod";
+import { sendPushNotification } from "@/lib/push";
 
 import { PLAN_IDS, INVESTMENT_PLANS } from "@/lib/config";
 
@@ -105,17 +106,7 @@ export async function POST(req: Request) {
         }
       });
 
-      // Create Notification log
-      await tx.notification.create({
-        data: {
-          userEmail: user.email,
-          title: "Investment Plan Activated",
-          message: `Your $${amount.toLocaleString()} ${plan} plan is now active! Expected payout date: ${endDate.toLocaleDateString()}.`,
-          type: "success",
-        }
-      });
-
-      // Create Audit Log
+      // Audit Log
       await tx.auditLog.create({
         data: {
           action: "INVESTMENT_STARTED",
@@ -123,10 +114,27 @@ export async function POST(req: Request) {
         }
       });
 
-      return { success: true, investment, user: updatedUser };
+      return { success: true, investment, user: updatedUser, userEmail: user.email, userName: user.name, endDate };
     });
 
-    return NextResponse.json(result);
+    // Send push notifications outside the interactive transaction
+    sendPushNotification({
+      userEmail: result.userEmail,
+      title: "Investment Plan Activated",
+      message: `Your $${amount.toLocaleString()} ${plan} plan is now active! Expected payout date: ${result.endDate.toLocaleDateString()}.`,
+      type: "success",
+      url: "/dashboard/investments",
+    }).catch((e) => console.warn("Client investment push failed:", e));
+
+    sendPushNotification({
+      userEmail: "admin",
+      title: "New Investment Created",
+      message: `Client ${result.userName} allocated $${amount.toLocaleString()} to ${plan} Plan.`,
+      type: "info",
+      url: "/admin/transactions",
+    }).catch((e) => console.warn("Admin investment alert push failed:", e));
+
+    return NextResponse.json({ success: true, investment: result.investment, user: result.user });
   } catch (error: any) {
     if (error.message === "USER_NOT_FOUND") {
       return NextResponse.json({ success: false, message: "User profile not found." }, { status: 404 });

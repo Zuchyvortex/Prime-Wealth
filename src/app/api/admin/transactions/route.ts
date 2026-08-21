@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
+import { sendPushNotification } from "@/lib/push";
 
 export async function GET() {
   try {
@@ -64,16 +65,16 @@ export async function POST(req: Request) {
       data: { status: finalStatus }
     });
 
-    await prisma.notification.create({
-      data: {
-        userEmail: tx.userEmail,
-        title: action === "approve" ? "Transaction Cleared" : "Transaction Declined",
-        message: action === "approve"
-          ? `Your ${tx.type} of $${tx.amount.toLocaleString()} has been approved and settled.`
-          : `Your ${tx.type} of $${tx.amount.toLocaleString()} was declined by safety operations.`,
-        type: action === "approve" ? "success" : "alert",
-      }
-    });
+    // Send Web Push & In-App Notification
+    sendPushNotification({
+      userEmail: tx.userEmail,
+      title: action === "approve" ? "Transaction Successful" : "Transaction Failed",
+      message: action === "approve"
+        ? `Your ${tx.type} of $${tx.amount.toLocaleString()} has been approved and settled.`
+        : `Your ${tx.type} of $${tx.amount.toLocaleString()} was declined by safety operations.`,
+      type: action === "approve" ? "success" : "alert",
+      url: "/dashboard/transactions",
+    }).catch((e) => console.warn("Admin tx decision push failed:", e));
 
     // Create Audit Log
     await prisma.auditLog.create({

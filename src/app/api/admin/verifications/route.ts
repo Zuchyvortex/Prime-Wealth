@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { sendEmail } from "@/lib/email";
+import { sendPushNotification } from "@/lib/push";
 
 // GET: Fetch all verification requests (Admin only)
 export async function GET() {
@@ -93,16 +94,14 @@ export async function POST(req: Request) {
         data: { status: "VERIFIED" },
       });
 
-      // Create internal notification
-      console.log(`[Admin Verifications POST] Creating internal notification...`);
-      await prisma.notification.create({
-        data: {
-          userEmail: verification.user.email,
-          title: "Identity Verification Approved",
-          message: "Congratulations! Your identity has been verified successfully. Your account is now fully verified and all platform features have been unlocked.",
-          type: "success",
-        },
-      });
+      // Send push notification
+      sendPushNotification({
+        userEmail: verification.user.email,
+        title: "Identity Verification Approved",
+        message: "Congratulations! Your identity has been verified successfully. All platform features are unlocked.",
+        type: "success",
+        url: "/dashboard/verification",
+      }).catch((e) => console.warn("KYC approve push failed:", e));
 
       // Log in the audit log
       console.log(`[Admin Verifications POST] Creating AuditLog entry...`);
@@ -158,15 +157,14 @@ export async function POST(req: Request) {
         data: { status: "REJECTED" },
       });
 
-      // Create internal notification
-      await prisma.notification.create({
-        data: {
-          userEmail: verification.user.email,
-          title: "Identity Verification Rejected",
-          message: `Unfortunately, your identity verification could not be approved. Reason: ${rejectionReason}.`,
-          type: "alert",
-        },
-      });
+      // Send push notification
+      sendPushNotification({
+        userEmail: verification.user.email,
+        title: "Identity Verification Rejected",
+        message: `Unfortunately, your identity verification could not be approved. Reason: ${rejectionReason}.`,
+        type: "alert",
+        url: "/dashboard/verification",
+      }).catch((e) => console.warn("KYC reject push failed:", e));
 
       // Log in the audit log
       await prisma.auditLog.create({
@@ -221,15 +219,14 @@ export async function POST(req: Request) {
         data: { status: "UNVERIFIED" },
       });
 
-      // Create internal notification
-      await prisma.notification.create({
-        data: {
-          userEmail: verification.user.email,
-          title: "Identity Verification Requires Attention",
-          message: `Your identity verification requires resubmission. Reason: ${rejectionReason}. Please visit the verification page to submit new documents.`,
-          type: "alert",
-        },
-      });
+      // Send push notification
+      sendPushNotification({
+        userEmail: verification.user.email,
+        title: "Identity Verification Requires Attention",
+        message: `Your identity verification requires resubmission. Reason: ${rejectionReason}.`,
+        type: "alert",
+        url: "/dashboard/verification",
+      }).catch((e) => console.warn("KYC resubmit push failed:", e));
 
       // Log in the audit log
       await prisma.auditLog.create({

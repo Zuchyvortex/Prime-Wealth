@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { z } from "zod";
+import { sendPushNotification } from "@/lib/push";
 
 const transactionSchema = z.object({
   type: z.enum(["deposit", "withdrawal", "transfer_send"]),
@@ -67,14 +68,14 @@ export async function POST(req: Request) {
         }
       });
 
-      await prisma.notification.create({
-        data: {
-          userEmail: user.email,
-          title: "Transfer Sent",
-          message: `You successfully transferred $${amount.toLocaleString()} to ${targetEmail}.`,
-          type: "success",
-        }
-      });
+      // Push notification for sender
+      sendPushNotification({
+        userEmail: user.email,
+        title: "Transfer Sent",
+        message: `You successfully transferred $${amount.toLocaleString()} to ${targetEmail}.`,
+        type: "success",
+        url: "/dashboard/transactions",
+      }).catch((e) => console.warn("Transfer send push failed:", e));
 
       // Audit Log
       await prisma.auditLog.create({
@@ -104,14 +105,14 @@ export async function POST(req: Request) {
           }
         });
 
-        await prisma.notification.create({
-          data: {
-            userEmail: recipient.email,
-            title: "Funds Received",
-            message: `You received $${amount.toLocaleString()} from ${user.name}.`,
-            type: "success",
-          }
-        });
+        // Push notification for recipient
+        sendPushNotification({
+          userEmail: recipient.email,
+          title: "Funds Received",
+          message: `You received $${amount.toLocaleString()} from ${user.name}.`,
+          type: "success",
+          url: "/dashboard/transactions",
+        }).catch((e) => console.warn("Transfer receive push failed:", e));
       }
 
       return NextResponse.json({ success: true, message: `Successfully sent $${amount.toLocaleString()}!` });
@@ -151,14 +152,23 @@ export async function POST(req: Request) {
         }
       });
 
-      await prisma.notification.create({
-        data: {
-          userEmail: user.email,
-          title: "Deposit Submitted",
-          message: `Your deposit request of $${amount.toLocaleString()} via ${method} has been submitted and is awaiting administrator verification.`,
-          type: "info",
-        }
-      });
+      // Push notification for client
+      sendPushNotification({
+        userEmail: user.email,
+        title: "Deposit Submitted",
+        message: `Your deposit request of $${amount.toLocaleString()} via ${method} has been submitted and is awaiting administrator verification.`,
+        type: "info",
+        url: "/dashboard/transactions",
+      }).catch((e) => console.warn("Deposit submitted push failed:", e));
+
+      // Push notification for admin
+      sendPushNotification({
+        userEmail: "admin",
+        title: "New Deposit",
+        message: `A client (${user.name}) has submitted a new deposit of $${amount.toLocaleString()} via ${method} requiring attention.`,
+        type: "info",
+        url: "/admin/transactions",
+      }).catch((e) => console.warn("Admin deposit alert push failed:", e));
 
       // Audit Log
       await prisma.auditLog.create({
@@ -201,18 +211,27 @@ export async function POST(req: Request) {
           description: `Withdrawal via ${method}`,
           status: "pending",
           method,
-          proof, // proof here represents the target payout details (address/tag)
+          proof,
         }
       });
 
-      await prisma.notification.create({
-        data: {
-          userEmail: user.email,
-          title: "Pending Approval",
-          message: `Your withdrawal of $${amount.toLocaleString()} via ${method} is awaiting compliance officer review.`,
-          type: "warning",
-        }
-      });
+      // Push notification for client
+      sendPushNotification({
+        userEmail: user.email,
+        title: "Pending Approval",
+        message: `Your withdrawal of $${amount.toLocaleString()} via ${method} is awaiting compliance officer review.`,
+        type: "warning",
+        url: "/dashboard/transactions",
+      }).catch((e) => console.warn("Withdrawal submitted push failed:", e));
+
+      // Push notification for admin
+      sendPushNotification({
+        userEmail: "admin",
+        title: "New Withdrawal Request",
+        message: `A client (${user.name}) requested a withdrawal of $${amount.toLocaleString()} via ${method}.`,
+        type: "warning",
+        url: "/admin/transactions",
+      }).catch((e) => console.warn("Admin withdrawal alert push failed:", e));
 
       // Audit Log
       await prisma.auditLog.create({
