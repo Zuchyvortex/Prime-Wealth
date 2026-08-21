@@ -18,11 +18,18 @@ export const metadata: Metadata = {
   description: "Secure, glassmorphic digital vault for elite investors. Monitor assets, process instant bank-grade transfers, and review advanced wealth metrics.",
   keywords: ["Wealth Management", "SaaS Dashboard", "Elite Portfolio", "Fintech Platform", "Prime Wealth"],
   authors: [{ name: "Prime Wealth Team" }],
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Prime Wealth",
+  },
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  themeColor: "#070913",
 };
 
 export default function RootLayout({

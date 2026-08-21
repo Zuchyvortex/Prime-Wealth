@@ -25,7 +25,7 @@ export default function SettingsPage() {
   const [newPw, setNewPw] = useState("");
   const [confirmNewPw, setConfirmNewPw] = useState("");
 
-  const [activeTab, setActiveTab] = useState<"profile" | "security" | "appearance">("profile");
+  const [activeTab, setActiveTab] = useState<"profile" | "security" | "appearance" | "notifications">("profile");
   const [feedback, setFeedback] = useState({ type: "", message: "" });
   const [loading, setLoading] = useState(false);
 
@@ -224,6 +224,7 @@ export default function SettingsPage() {
         {[
           { id: "profile", label: "Profile Info", icon: <User className="w-4 h-4" /> },
           { id: "appearance", label: "Appearance", icon: <Palette className="w-4 h-4" /> },
+          { id: "notifications", label: "Push Notifications", icon: <Bell className="w-4 h-4" /> },
           { id: "security", label: "Security", icon: <Shield className="w-4 h-4" /> },
         ].map((tab) => (
           <button
@@ -363,6 +364,121 @@ export default function SettingsPage() {
                   )}
                 </button>
               ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ===== NOTIFICATIONS TAB ===== */}
+      {activeTab === "notifications" && (
+        <div className="space-y-6 max-w-2xl">
+          <div className="glass rounded-2xl p-6 border border-[var(--glass-border)] space-y-6">
+            <div>
+              <h4 className="text-sm font-bold text-foreground mb-1">Web Push Notifications</h4>
+              <p className="text-xs text-slate-500">
+                Receive real-time alerts for support messages, deposit confirmations, and transaction clearances directly on your OS desktop or mobile lock screen.
+              </p>
+            </div>
+
+            <div className="p-4 rounded-xl border border-[var(--glass-border)] bg-white/5 space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold text-slate-400">Browser Permission:</span>
+                <span className="text-xs font-bold font-mono uppercase px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-400">
+                  {typeof Notification !== "undefined" ? Notification.permission : "Not Supported"}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold text-slate-400">Service Worker:</span>
+                <span className="text-xs font-bold font-mono px-2.5 py-1 rounded-full bg-blue-500/20 text-blue-400">
+                  {typeof navigator !== "undefined" && "serviceWorker" in navigator ? "Active (/sw.js)" : "Unavailable"}
+                </span>
+              </div>
+            </div>
+
+            <div className="pt-2 flex flex-wrap items-center gap-3">
+              <button
+                type="button"
+                onClick={async () => {
+                  if (typeof Notification === "undefined") return;
+                  setLoading(true);
+                  try {
+                    const perm = await Notification.requestPermission();
+                    if (perm === "granted" && "serviceWorker" in navigator) {
+                      const reg = await navigator.serviceWorker.ready;
+                      const resKey = await fetch("/api/push/vapid-key");
+                      const keyData = await resKey.json();
+                      if (keyData.publicKey) {
+                        const padding = "=".repeat((4 - (keyData.publicKey.length % 4)) % 4);
+                        const base64 = (keyData.publicKey + padding).replace(/-/g, "+").replace(/_/g, "/");
+                        const rawData = window.atob(base64);
+                        const outputArray = new Uint8Array(rawData.length);
+                        for (let i = 0; i < rawData.length; ++i) {
+                          outputArray[i] = rawData.charCodeAt(i);
+                        }
+                        const sub = await reg.pushManager.subscribe({
+                          userVisibleOnly: true,
+                          applicationServerKey: outputArray,
+                        });
+                        const subJson = sub.toJSON();
+                        await fetch("/api/push/subscribe", {
+                          method: "POST",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({ endpoint: subJson.endpoint, keys: subJson.keys }),
+                        });
+                        setFeedback({ type: "success", message: "Push notification subscription enabled & registered!" });
+                      }
+                    } else {
+                      setFeedback({ type: "error", message: "Notification permission denied or unavailable." });
+                    }
+                  } catch (err: any) {
+                    setFeedback({ type: "error", message: err.message || "Failed to enable notifications." });
+                  } finally {
+                    setLoading(false);
+                  }
+                }}
+                disabled={loading}
+                className="px-5 py-2.5 bg-gradient-neon text-[#022c22] rounded-xl text-xs font-bold hover:brightness-110 active:scale-98 transition-all cursor-pointer shadow-md disabled:opacity-50 flex items-center gap-2"
+              >
+                <Bell className="w-4 h-4" />
+                {loading ? "Registering..." : "Enable / Refresh Push Subscription"}
+              </button>
+
+              <button
+                type="button"
+                onClick={async () => {
+                  setLoading(true);
+                  try {
+                    const res = await fetch("/api/push/test", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                    });
+                    const data = await res.json();
+                    if (res.ok && data.success) {
+                      setFeedback({ type: "success", message: "Test Web Push notification sent! Check your OS/browser notifications." });
+                    } else {
+                      setFeedback({ type: "error", message: data.error || "Failed to dispatch test notification." });
+                    }
+                  } catch (err: any) {
+                    setFeedback({ type: "error", message: err.message || "Network request failed." });
+                  } finally {
+                    setLoading(false);
+                  }
+                }}
+                disabled={loading}
+                className="px-5 py-2.5 bg-white/10 text-foreground border border-[var(--glass-border)] rounded-xl text-xs font-bold hover:bg-white/15 active:scale-98 transition-all cursor-pointer shadow-md disabled:opacity-50 flex items-center gap-2"
+              >
+                <CheckCircle className="w-4 h-4 text-emerald-400" />
+                Send Test Notification
+              </button>
+            </div>
+
+            <div className="border-t border-[var(--glass-border)] pt-4 text-xs text-slate-400 space-y-2 leading-relaxed">
+              <p className="font-bold text-foreground">💡 Mobile & Device Requirements:</p>
+              <ul className="list-disc pl-4 space-y-1">
+                <li><strong>iOS / iPhone (iOS 16.4+)</strong>: Must tap Share &rarr; <em>"Add to Home Screen"</em> and launch Prime Wealth from the home screen icon.</li>
+                <li><strong>Android / Desktop</strong>: Ensure Chrome/Edge/Safari notification alerts and sounds are turned ON in device OS settings.</li>
+                <li><strong>Tab Closed Delivery</strong>: Web Push notifications will arrive even when the tab or browser is closed.</li>
+              </ul>
             </div>
           </div>
         </div>
